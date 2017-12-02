@@ -66,7 +66,7 @@ public class IntfzCurvaCorregida extends JFrame {
 		contentPane.add(lblCurvaCorregida);
 		
 		//CONSTRUCCION DE LA TABLA
-		String[] columnName = {"N","Tensión(V)","Corriente(A)","Potencia(W)"};
+		String[] columnName = {"N","TensiÃ³n(V)","Corriente(A)","Potencia(W)"};
 		
 		Object [] [] data= new Object [curva.getPts().size()] [columnName.length];//array de objetos
 		int i = 0; //indice sobre el que construiremos la tabla
