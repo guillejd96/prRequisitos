@@ -24,10 +24,10 @@ public class IntfzModuloElegido {
 
 	private JFrame frame;
 	//EL MODULO OBTENIDO
-	private Modulo mod;
+	private Modulo mod = new Modulo();
 	private JTable tablaCurvas;
-	private ArrayList<curva> listaDeCurvas; 		   //curvas seleccionadas en la campaña
-	private ArrayList<curva> listaDeCurvasACorregir;//curvas seleccionadas para corregir
+	private ArrayList<CurvaOriginal> listaDeCurvas; 		//curvas seleccionadas en la campaña
+	private ArrayList<CurvaOriginal> listaDeCurvasACorregir;//curvas seleccionadas para corregir
 
 	JPanel panelCurva;
 	JPanel panelCorreccion;
@@ -45,15 +45,11 @@ public class IntfzModuloElegido {
 			public void run() {
 				try {
 					//inicializacion
-					mod = new Modulo(nombreModulo);
 
-					listaDeCurvas = mod.getCurvas();
-					listaDeCurvasACorregir = new ArrayList<curva>();
-
-					IntfzModuloElegido window = new IntfzModuloElegido();
+					IntfzModuloElegido window = new IntfzModuloElegido(nombreModulo);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Error!",JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -61,21 +57,27 @@ public class IntfzModuloElegido {
 
 	/**
 	 * Create the application.
+	 * @throws ClassNotFoundException 
 	 */
-	public IntfzModuloElegido() {
+	public IntfzModuloElegido( String nombreModulo) throws ClassNotFoundException {
 
-		initialize();
+		initialize(nombreModulo);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws ClassNotFoundException 
 	 */
-	private void initialize() {
+	private void initialize(String nombreModulo) throws ClassNotFoundException {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 625, 373);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-
+		
+		mod = new Modulo(nombreModulo);
+		listaDeCurvas = mod.getCurvas();
+		listaDeCurvasACorregir = new ArrayList<CurvaOriginal>();
+		
 		frame.setTitle("Modulo :"+mod.getNombre());
 
 		//------PANEL CURVAS	
@@ -254,7 +256,7 @@ public class IntfzModuloElegido {
 		panelCorreccion.add(btnAtras_correccion);
 
 		//-----necesario para la inicializacion
-		panelCurva.setVisible(false);
+		panelCurva.setVisible(true);
 		panelCorreccion.setVisible(false);
 	}
 }
