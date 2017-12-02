@@ -21,32 +21,26 @@ public class CurvaOriginal implements curva {
     
     private String fecha;
 
-    public CurvaOriginal(double isc, double voc, double pmax,double ipmax, double vpmax, double ff, List<parIV> PTS,String date,double t, double i) {
-    	//los datos entran desde una clase que lea archivos de curva
-    	
-    	//hay que hacer algo con el id
-    	this.fecha = date;
-    	this.FF = ff;
-    	this.Pmax=pmax;
-    	this.IPmax = ipmax;
-    	this.Isc = isc;
-    	this.pts = PTS;
-    	this.Voc = voc;
-    	this.VPmax = vpmax;
-    	this.temp = t;
-    	this.irr = i;
-    	
-    	try {
-			BDConnection baseDatos = new BDConnection();
-			baseDatos.Insert("INSERT INTO curvaOriginal... ");
-			
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-    }
+   public CurvaOriginal(double isc, double voc, double pmax,double ipmax, double vpmax, double ff, List<parIV> PTS,String date,double t,double i) throws ClassNotFoundException {
+
+		this.fecha = date;
+		this.FF = ff;
+		this.Pmax=pmax;
+		this.IPmax = ipmax;
+		this.Isc = isc;
+		this.pts = PTS;
+		this.Voc = voc;
+		this.VPmax = vpmax;
+		this.temp = t;
+		this.irr = i;
+
+		BDConnection baseDatos = new BDConnection();
+		baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+nuevoID()+",'"+date+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+");");
+
+	}
     
     
-    public CurvaOriginal(int i) {
+    	public CurvaOriginal(int i) {
 		// dado un id carga el objeto de la base de datos;
     	idCurva = i;
 	}
@@ -153,5 +147,15 @@ public class CurvaOriginal implements curva {
 	public void setIdCurva(int idCurva) {
 		this.idCurva = idCurva;
 	}
+	
+	private int nuevoID() throws ClassNotFoundException{
+		BDConnection baseDatos = new BDConnection();
+		List<Object[]> listaID = baseDatos.Select("SELECT IDCURVA FROM CURVAORIGINAL;");
+		int max = 0;
+		for(Object[] aux : listaID){
+			if(max < (int) aux[0]){
+				max = (int) aux[0];
+			}
+		}
 }
 
