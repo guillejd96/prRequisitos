@@ -24,10 +24,10 @@ public class IntfzModuloElegido {
 
 	private JFrame frame;
 	//EL MODULO OBTENIDO
-	private Modulo mod;
+	private Modulo mod = new Modulo();
 	private JTable tablaCurvas;
-	private ArrayList<curva> listaDeCurvas; 		   //curvas seleccionadas en la campaña
-	private ArrayList<curva> listaDeCurvasACorregir;//curvas seleccionadas para corregir
+	private ArrayList<CurvaOriginal> listaDeCurvas; 		//curvas seleccionadas en la campaña
+	private ArrayList<CurvaOriginal> listaDeCurvasACorregir;//curvas seleccionadas para corregir
 
 	JPanel panelCurva;
 	JPanel panelCorreccion;
@@ -45,15 +45,11 @@ public class IntfzModuloElegido {
 			public void run() {
 				try {
 					//inicializacion
-					mod = new Modulo(nombreModulo);
 
-					listaDeCurvas = mod.getCurvas();
-					listaDeCurvasACorregir = new ArrayList<curva>();
-
-					IntfzModuloElegido window = new IntfzModuloElegido();
+					IntfzModuloElegido window = new IntfzModuloElegido(nombreModulo);
 					window.frame.setVisible(true);
 				} catch (Exception e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(null, e.getMessage(), "Error!",JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
@@ -61,28 +57,28 @@ public class IntfzModuloElegido {
 
 	/**
 	 * Create the application.
+	 * @throws ClassNotFoundException 
 	 */
-	public IntfzModuloElegido() {
+	public IntfzModuloElegido( String nombreModulo) throws ClassNotFoundException {
 
-		initialize();
+		initialize(nombreModulo);
 	}
 
 	/**
 	 * Initialize the contents of the frame.
+	 * @throws ClassNotFoundException 
 	 */
-	private void initialize() {
+	private void initialize(String nombreModulo) throws ClassNotFoundException {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 625, 373);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(null);
-
+		
+		mod = new Modulo(nombreModulo);
+		listaDeCurvas = mod.getCurvas();
+		listaDeCurvasACorregir = new ArrayList<CurvaOriginal>();
+		
 		frame.setTitle("Modulo :"+mod.getNombre());
-
-		//------PANEL CURVAS	
-		panelCurva = new JPanel();
-		panelCurva.setBounds(0, 0, 609, 334);
-		frame.getContentPane().add(panelCurva);
-		panelCurva.setLayout(null);
 
 		//CONSTRUCCION DE LA TABLA
 		//DEJAMOS LOS CANALES PARA FUTURAS IMPLEMENTACIONES
@@ -104,37 +100,45 @@ public class IntfzModuloElegido {
 			data[i][8] = co.getIdCurva();		//id en la base de datos, necesario para obtener las seleccionadas
 
 		}
-		tablaCurvas = new JTable(data,columnName);
-		tablaCurvas.setBounds(20, 11, 414, 183);
+		
+				//------PANEL CURVAS	
+				panelCurva = new JPanel();
+				panelCurva.setBounds(0, 0, 609, 339);
+				frame.getContentPane().add(panelCurva);
+				panelCurva.setLayout(null);
+				tablaCurvas = new JTable(data,columnName);
+				tablaCurvas.setBounds(20, 11, 414, 183);
+				
+				
+						JScrollPane scrollPane = new JScrollPane(tablaCurvas);
+						scrollPane.setBounds(20, 11, 579, 278);
+						panelCurva.add(scrollPane);
+						
+								//-----BOTON CORREGIR
+								JButton btnCorregir = new JButton("Corregir");
+								btnCorregir.addActionListener(new ActionListener() {
+									public void actionPerformed(ActionEvent e) {
+										//obtener todas las curvas que se han seleccionado
+										for(int i = 0; i < listaDeCurvas.size();i++) {
+											if( data[i][1].equals(Boolean.TRUE)) {
 
-
-		JScrollPane scrollPane = new JScrollPane(tablaCurvas);
-		scrollPane.setBounds(20, 11, 579, 278);
-		panelCurva.add(scrollPane);
-
-		//-----BOTON CORREGIR
-		JButton btnCorregir = new JButton("Corregir");
-		btnCorregir.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//obtener todas las curvas que se han seleccionado
-				for(int i = 0; i < listaDeCurvas.size();i++) {
-					if( data[i][1].equals(Boolean.TRUE)) {
-
-						int id = (int) data[i][8];				//PODRIA DAR FALLO, REVISAR
-						listaDeCurvasACorregir.add( new CurvaOriginal(id) );
-					}
-				}
-				//Si no se selecciona ninguna
-				if(listaDeCurvasACorregir.isEmpty()) {
-					JOptionPane.showMessageDialog(null, "No se han seleccionado curvas", "Aviso",JOptionPane.WARNING_MESSAGE);
-				}else {
-					panelCurva.setVisible(false);
-					panelCorreccion.setVisible(true);
-				}
-			}
-		});
-		btnCorregir.setBounds(510, 300, 89, 23);
-		panelCurva.add(btnCorregir);
+												int id = (int) data[i][8];				//PODRIA DAR FALLO, REVISAR
+												listaDeCurvasACorregir.add( new CurvaOriginal(id) );
+											}
+										}
+										//Si no se selecciona ninguna
+										if(listaDeCurvasACorregir.isEmpty()) {
+											JOptionPane.showMessageDialog(null, "No se han seleccionado curvas", "Aviso",JOptionPane.WARNING_MESSAGE);
+										}else {
+											panelCurva.setVisible(false);
+											panelCorreccion.setVisible(true);
+										}
+									}
+								});
+								btnCorregir.setBounds(510, 300, 89, 23);
+								panelCurva.add(btnCorregir);
+								
+										
 
 
 		//------PANEL CORRECCION
@@ -187,7 +191,7 @@ public class IntfzModuloElegido {
 
 		txtfBetta = new JTextField();
 		txtfBetta.setBounds(103, 168, 109, 20);
-		txtfAlpha.setText(String.valueOf(mod.getBeta()));	//valor por defecto del módulo
+		txtfBetta.setText(String.valueOf(mod.getBeta()));	//valor por defecto del módulo
 		panelCorreccion.add(txtfBetta);
 		txtfBetta.setColumns(10);
 
@@ -198,7 +202,7 @@ public class IntfzModuloElegido {
 
 		txtfKappa = new JTextField();
 		txtfKappa.setBounds(103, 218, 109, 20);
-		txtfAlpha.setText(String.valueOf(mod.getKappa()));	//valor por defecto del módulo
+		txtfKappa.setText(String.valueOf(mod.getKappa()));	//valor por defecto del módulo
 		panelCorreccion.add(txtfKappa);
 		txtfKappa.setColumns(10);
 
@@ -252,9 +256,8 @@ public class IntfzModuloElegido {
 		});
 		btnAtras_correccion.setBounds(10, 300, 89, 23);
 		panelCorreccion.add(btnAtras_correccion);
-
 		//-----necesario para la inicializacion
-		panelCurva.setVisible(false);
+		panelCurva.setVisible(true);
 		panelCorreccion.setVisible(false);
 	}
 }
