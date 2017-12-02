@@ -15,7 +15,6 @@ public class ImportarCurva {
 	}
 
 	public CurvaOriginal importarCurva(String file) throws FileNotFoundException, ClassNotFoundException{
-		// NO ESTA ACABADO
 
 		Scanner sc = new Scanner(new File(file));
 		Scanner auxSC;
@@ -47,51 +46,121 @@ public class ImportarCurva {
 		auxSC = new Scanner(hora);
 		auxSC.next();
 		hora = auxSC.next();
+		auxSC.close();
 		System.out.println(hora);
 
-
-		IterarHasta(sc, new String(), "Isc:");
-
-		double isc = sc.nextDouble(); // ISC
-		System.out.println("ISC: "+isc);
-		IterarHasta(sc, new String(), "Voc:");
-		double voc = sc.nextDouble(); // VOC
-		System.out.println("VOC: "+voc);
-		IterarHasta(sc, new String(), "Pmax:");
-		double pmax = sc.nextDouble(); // PMAX
-		System.out.println("PMAX: "+pmax);
-		IterarHasta(sc, new String(), "IPmax:");
-		double ipmax = sc.nextDouble(); // IPMAX
-		System.out.println("IPMAX: "+ipmax);
-		IterarHasta(sc, new String(), "VPmax:");
-		double vpmax = sc.nextDouble(); // VPMAX
-		System.out.println("VPMAX: "+vpmax);
-		IterarHasta(sc, new String(), "FF:");
-		double ff = sc.nextDouble(); // FF
-		System.out.println("FF: "+ff);
+		sc.nextLine();
+		sc.nextLine();
 
 
+		String aux = sc.nextLine(); // -- ISC
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		double isc = auxSC.nextDouble();
+		auxSC.close();
+		System.out.println(isc);
 
-		IterarHasta(sc, new String(), "IV:");
+		aux = sc.nextLine(); // -- VOC
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		double voc = auxSC.nextDouble();
+		auxSC.close();
+		System.out.println(voc);
 
-		int nPuntos = sc.nextInt(); // Numero de puntos
+		aux = sc.nextLine(); // -- PMAX
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		double pmax = auxSC.nextDouble();
+		auxSC.close();
+		System.out.println(pmax);
 
-		System.out.println("Numero de puntos: "+nPuntos);
+		aux = sc.nextLine(); // -- IPMAX
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		double ipmax = auxSC.nextDouble();
+		auxSC.close();
+		System.out.println(ipmax);
 
-		IterarHasta(sc, new String(), "1");
+		aux = sc.nextLine(); // -- VPMAX
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		double vpmax = auxSC.nextDouble();
+		auxSC.close();
+		System.out.println(vpmax);
+
+		aux = sc.nextLine(); // -- FF
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		double ff = auxSC.nextDouble();
+		auxSC.close();
+		System.out.println(ff);
+
+		for(int k=0;k<9;k++){ // Itero hasta la linea 22
+			sc.nextLine();
+		}
+
+		aux = sc.nextLine(); // -- TEMPERATURA AMBIENTE
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		auxSC.next();
+		double temp = auxSC.nextDouble();
+		auxSC.close();
+		System.out.println(temp);
+
+		sc.nextLine(); // Itero hasta la linea 25
+		sc.nextLine();
+
+		aux = sc.nextLine(); // -- IRRADIANCIA
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		auxSC.next();
+		double irr = auxSC.nextDouble();
+		auxSC.close();
+		System.out.println(irr);
+
+		for(int k=0;k<9;k++){ // Itero hasta la linea 35
+			sc.nextLine();
+		}
+
+		aux = sc.nextLine(); // -- NUMERO DE PUNTOS
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		auxSC.next();
+		auxSC.next();
+		auxSC.next();
+		auxSC.next();
+		int nPuntos = auxSC.nextInt();
+		auxSC.close();
+		System.out.println(nPuntos);
+
 		ArrayList<parIV> pares = new ArrayList<>();
 
-		for(int i=0;i<nPuntos;i++){
-			double vo = sc.nextDouble(); // Voltaje
-			double in = sc.nextDouble(); // Intensidad
-			double po = sc.nextDouble(); // Potencia
-			System.out.println((i+1)+" V: "+vo+" In: "+in);
-			sc.next();
-			parIV p = new parIV(in, vo);
+		sc.nextLine();
+		aux = sc.nextLine();
+
+		for(int i=0;i<nPuntos-1;i++){ // -- PUNTOS
+			auxSC = new Scanner(aux);
+			auxSC.next();
+			double vo = auxSC.nextDouble();
+			double in = auxSC.nextDouble();
+			System.out.println(vo+" "+in);
+			aux = sc.nextLine();
+			auxSC.close();
+			parIV p = new parIV(in,vo);
 			pares.add(p);
 		}
 
-		CurvaOriginal auxCurva = new CurvaOriginal(isc, voc, pmax,ipmax, vpmax, ff, pares, fecha);
+		auxSC = new Scanner(aux); // -- ULTIMO PUNTO
+		auxSC.next();
+		double vo = auxSC.nextDouble();
+		double in = auxSC.nextDouble();
+		System.out.println(vo+" "+in);
+		parIV p = new parIV(in, vo);
+		pares.add(p);
+		auxSC.close();
+		sc.close();
+
+		CurvaOriginal auxCurva = new CurvaOriginal(isc, voc, pmax,ipmax, vpmax, ff, pares, fecha,temp,irr);
 
 		BDConnection miBD = new BDConnection();
 		List<Object[]> auxM = miBD.Select("SELECT * FROM MODULO WHERE NOMBREMODULO='"+moduleName+"'");
@@ -99,21 +168,8 @@ public class ImportarCurva {
 		if(auxM.isEmpty()) { // Si el modulo al que pertenece la curva no esta en la BD
 			Modulo auxModule = new Modulo(moduleName); // Creamos el modulo con solo el nombre
 		}
-
-		sc.close();
-		auxSC.close();
 		return auxCurva;
 	}
 
-	private void IterarHasta(Scanner sc,String aux,String s){
-		while(!aux.equals(s)){
-			aux=sc.nextLine();
-		}
-	}
-
-	public static void main(String[] args) throws FileNotFoundException, ClassNotFoundException {
-		ImportarCurva im = new ImportarCurva();
-		CurvaOriginal cv = im.importarCurva("IV_I-53 946309_20170822_152424.xls");
-	}
-
 }
+
