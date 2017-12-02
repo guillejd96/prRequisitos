@@ -106,6 +106,7 @@ public class IntfzModuloElegido {
 
 		}
 		
+
 //------PANEL CURVAS	
 		panelCurva = new JPanel();
 		panelCurva.setBounds(0, 0, 609, 334);
@@ -149,6 +150,7 @@ public class IntfzModuloElegido {
 				btnCorregir.setBounds(510, 300, 89, 23);
 				panelCurva.add(btnCorregir);					
 									
+
 
 		//------PANEL CORRECCION
 		panelCorreccion = new JPanel();
@@ -266,6 +268,7 @@ public class IntfzModuloElegido {
 		});
 		btnAtras_correccion.setBounds(10, 300, 89, 23);
 		panelCorreccion.add(btnAtras_correccion);
+
 		
 		JLabel lblT1 = new JLabel("tempOriginal");
 		lblT1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -333,6 +336,7 @@ public class IntfzModuloElegido {
 		
 		
 //-----necesario para la inicializacion
+
 		panelCurva.setVisible(true);
 		panelCorreccion.setVisible(false);
 	}
