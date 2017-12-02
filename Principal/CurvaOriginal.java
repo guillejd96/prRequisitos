@@ -157,5 +157,7 @@ public class CurvaOriginal implements curva {
 				max = (int) aux[0];
 			}
 		}
+		return (max+1);
+	}
 }
 
