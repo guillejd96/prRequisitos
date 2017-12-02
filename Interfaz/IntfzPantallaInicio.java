@@ -9,17 +9,24 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.border.EmptyBorder;
+
+import principal.Modulo;
+
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Frame;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
 import javax.swing.UIManager;
 import java.awt.Color;
 import javax.swing.JLayeredPane;
+import javax.swing.JOptionPane;
 import javax.swing.JDesktopPane;
 
 public class IntfzPantallaInicio extends JFrame {
@@ -29,6 +36,12 @@ public class IntfzPantallaInicio extends JFrame {
 	private JLabel lblPvtranslator;
 	private JButton btnListaModulo;
 	private JButton btnImportarModulo;
+	private JButton btnImportarCurva;
+	//SLOTS DE MODULOS
+	private Modulo mod1 = new Modulo();
+	private Modulo mod2 = new Modulo();
+	private Modulo mod3 = new Modulo();
+	private Modulo mod4 = new Modulo();
 	
 	private JPanel panelModulo;
 	private JLabel ListaModuloTitulo;
@@ -36,22 +49,22 @@ public class IntfzPantallaInicio extends JFrame {
 	private JSeparator separator;
 	private JLabel modulo1_tit;
 	private JLabel modulo1_nametxt;
-	private JLabel modulo1_name;
+	private JLabel modulo1_name = new JLabel("");
 	private JButton btnModulo1;
 	private JSeparator separator_1;
 	private JLabel modulo2_tit;
 	private JLabel modulo2_nametxt;
-	private JLabel modulo2_name;
+	private JLabel modulo2_name = new JLabel("");
 	private JButton btnModulo2;
 	private JSeparator separator_2;
 	private JLabel modulo3_tit;
 	private JLabel modulo3_nametxt;
-	private JLabel modulo3_name;
+	private JLabel modulo3_name = new JLabel("");
 	private JButton btnModulo3;
 	private JSeparator separator_3;
 	private JLabel modulo4_tit;
 	private JLabel modulo4_nametxt;
-	private JLabel modulo4_name;
+	private JLabel modulo4_name= new JLabel("");
 	private JButton btnModulo4;
 	/**
 	 * Launch the application.
@@ -60,6 +73,7 @@ public class IntfzPantallaInicio extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					IntfzPantallaInicio frame = new IntfzPantallaInicio();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -80,6 +94,13 @@ public class IntfzPantallaInicio extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
+		mod1 = new Modulo();
+		mod2 = new Modulo();
+		mod3 = new Modulo();
+		mod4 = new Modulo();
+		
+		cargaDatos();		//cargamos los datos en los slots
+		
 		this.setTitle("PVTRANSLATOR");
 		Image logoPyromik = new ImageIcon(this.getClass().getResource("/Images/pyromikLogo.jpeg")).getImage();
 		
@@ -89,7 +110,7 @@ public class IntfzPantallaInicio extends JFrame {
 		panelInicial.setLayout(null);
 		//------TEXTO DE ABAJO		
 		JTextPane txtpnBalBlaBla = new JTextPane();
-		txtpnBalBlaBla.setBounds(97, 160, 347, 128);
+		txtpnBalBlaBla.setBounds(97, 180, 347, 128);
 		panelInicial.add(txtpnBalBlaBla);
 		txtpnBalBlaBla.setBackground(UIManager.getColor("Button.background"));
 		txtpnBalBlaBla.setText("BAL BLA BLA");
@@ -118,6 +139,18 @@ public class IntfzPantallaInicio extends JFrame {
 			}
 		});
 		panelInicial.add(btnImportarModulo);
+		//------BOTON IMPORTAR CURVA
+		btnImportarCurva = new JButton("Importar curva");
+		btnImportarCurva.setBounds(285, 156, 134, 23);
+		btnImportarCurva.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+						
+				IntfzImportarCurva im = new IntfzImportarCurva();
+				im.newScreen();
+						dispose();
+				}
+			});
+		panelInicial.add(btnImportarCurva);
 		
 		//-----TITULO
 		lblPvtranslator = new JLabel("PVTRANSLATOR");
@@ -164,13 +197,22 @@ public class IntfzPantallaInicio extends JFrame {
 		modulo1_nametxt.setBounds(99, 78, 69, 14);
 		panelModulo.add(modulo1_nametxt);
 		
-		modulo1_name = new JLabel("");
+		
 		modulo1_name.setBounds(178, 78, 203, 14);
 		panelModulo.add(modulo1_name);
 		
 		btnModulo1 = new JButton("Elegir");
 		btnModulo1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				IntfzModuloElegido me;
+				try {
+					me = new IntfzModuloElegido(mod1.getNombre());
+					me.newScreen(mod1.getNombre());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, e1.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
+				}
+				
 			}
 		});
 		if(modulo1_name.getText().equals("")) {			//si no hay módulo este es desactivado
@@ -192,13 +234,21 @@ public class IntfzPantallaInicio extends JFrame {
 		modulo2_nametxt.setBounds(99, 117, 69, 14);
 		panelModulo.add(modulo2_nametxt);
 		
-		modulo2_name = new JLabel("");
+		
 		modulo2_name.setBounds(178, 117, 203, 14);
 		panelModulo.add(modulo2_name);
 		
 		btnModulo2 = new JButton("Elegir");
 		btnModulo2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				IntfzModuloElegido me;
+				try {
+					me = new IntfzModuloElegido(mod2.getNombre());
+					me.newScreen(mod2.getNombre());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, e1.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
+				}
 			}
 			
 		});
@@ -222,13 +272,21 @@ public class IntfzPantallaInicio extends JFrame {
 		modulo3_nametxt.setBounds(99, 156, 69, 14);
 		panelModulo.add(modulo3_nametxt);
 		
-		modulo3_name = new JLabel("");
+		
 		modulo3_name.setBounds(178, 156, 203, 14);
 		panelModulo.add(modulo3_name);
 		
 		btnModulo3 = new JButton("Elegir");
 		btnModulo3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				IntfzModuloElegido me;
+				try {
+					me = new IntfzModuloElegido(mod3.getNombre());
+					me.newScreen(mod3.getNombre());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, e1.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
@@ -252,13 +310,21 @@ public class IntfzPantallaInicio extends JFrame {
 		modulo4_nametxt.setBounds(99, 195, 69, 14);
 		panelModulo.add(modulo4_nametxt);
 		
-		modulo4_name = new JLabel("");
+		
 		modulo4_name.setBounds(178, 195, 203, 14);
 		panelModulo.add(modulo4_name);
 		
 		btnModulo4 = new JButton("Elegir");
 		btnModulo4.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				IntfzModuloElegido me;
+				try {
+					me = new IntfzModuloElegido(mod3.getNombre());
+					me.newScreen(mod3.getNombre());
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, e1.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		
@@ -274,7 +340,35 @@ public class IntfzPantallaInicio extends JFrame {
 
 		
 	}
+	private void cargaDatos() {
+		List<Modulo> slotsModulo = new ArrayList<Modulo>();
+		slotsModulo.add(mod1);slotsModulo.add(mod2);slotsModulo.add(mod3);
+		slotsModulo.add(mod4);
+		List<JLabel> listaNombres = new ArrayList<JLabel>();	//actualizará el nombre del módulo si existe
+		listaNombres.add(modulo1_name);listaNombres.add(modulo2_name);
+		listaNombres.add(modulo3_name);listaNombres.add(modulo4_name);
 		
+		try {
+			List<Modulo> modulosEnSistema = Modulo.ListaModulo();
+			if(modulosEnSistema != null) {			//si hay modulos en el sistema
+				Iterator<Modulo> itSlot = slotsModulo.iterator();
+				Iterator<JLabel> itNombre = listaNombres.iterator();
+				
+				for(Modulo mod : modulosEnSistema) {
+					String name = mod.getNombre();
+					
+					itSlot.next().setNombre(name);
+					JLabel a = itNombre.next();
+					a.setText(name);
+				}
+				
+			}
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}//end cargaDatos()
 
 		
 	}
