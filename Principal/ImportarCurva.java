@@ -171,7 +171,7 @@ public class ImportarCurva {
 		if(auxM.isEmpty()) { // Si el modulo al que pertenece la curva no esta en la BD
 			Modulo auxModule = new Modulo(moduleName); // Creamos el modulo con solo el nombre
 		}
-		CurvaOriginal auxCurva = new CurvaOriginal(isc, voc, pmax,ipmax, vpmax, ff, pares, fecha,temp,irr);
+		CurvaOriginal auxCurva = new CurvaOriginal(isc, voc, pmax,ipmax, vpmax, ff, pares, fecha,temp,irr,moduleName);
 		
 		
 		return auxCurva;
