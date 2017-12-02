@@ -10,6 +10,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import principal.CurvaOriginal;
+import principal.ImportarCurva;
 import principal.ImportarModulo;
 import principal.Modulo;
 
@@ -94,6 +96,7 @@ public class IntfzImportarCurva extends JFrame {
 					try {
 						//AQUI VA EL MÉTODO
 						//Modulo mod =ImportarModulo.importarModulo(textField.getText());
+						CurvaOriginal cuOr = ImportarCurva.importarCurva(textField.getText());
 						
 					} catch (Exception e1) {
 						JOptionPane.showMessageDialog(null, e1.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
