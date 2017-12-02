@@ -3,11 +3,16 @@ import java.awt.BorderLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import principal.ImportarModulo;
+import principal.Modulo;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
@@ -85,8 +90,17 @@ public class IntfzImportarModulo extends JFrame {
 		btnSubirArchivo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//QUE HACE EL BOTON
-				JOptionPane.showMessageDialog(null, "Subir archivo");
-				
+				if(!textField.getText().equals("")) {
+					try {
+						Modulo mod =ImportarModulo.importarModulo(textField.getText());
+						
+					} catch (Exception e1) {
+						JOptionPane.showMessageDialog(null, e1.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
+					}
+					JOptionPane.showMessageDialog(null, "El archivo se ha subido a la bd");
+				}else {
+					JOptionPane.showMessageDialog(null, "Introduzca archivo","Error!",JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		});
 //-----BOTON CANCELAR
