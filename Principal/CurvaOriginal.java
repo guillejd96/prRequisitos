@@ -8,6 +8,8 @@ public class CurvaOriginal implements curva {
     private List<parIV> pts;
     
     private int idCurva;
+	
+	private String modName;
     
     private double Isc;
     private double Voc;
@@ -21,7 +23,7 @@ public class CurvaOriginal implements curva {
     
     private String fecha;
 
-   public CurvaOriginal(double isc, double voc, double pmax,double ipmax, double vpmax, double ff, List<parIV> PTS,String date,double t,double i) throws ClassNotFoundException {
+   public CurvaOriginal(double isc, double voc, double pmax,double ipmax, double vpmax, double ff, List<parIV> PTS,String date,double t,double i,String mod) throws ClassNotFoundException {
 
 		this.fecha = date;
 		this.FF = ff;
@@ -33,9 +35,10 @@ public class CurvaOriginal implements curva {
 		this.VPmax = vpmax;
 		this.temp = t;
 		this.irr = i;
+	   this.modName=mod;
 
 		BDConnection baseDatos = new BDConnection();
-		baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+nuevoID()+",'"+date+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+");");
+		baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+nuevoID()+",'"+date+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+",'"+mod+"');");
 
 	}
     
