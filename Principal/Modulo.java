@@ -1,5 +1,6 @@
 package principal;
 
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -9,7 +10,7 @@ import interfaz.BDConnection;
 public class Modulo {
 
 	private String nombre;
-	private ArrayList<curva> curvas;
+	private ArrayList<CurvaOriginal> curvas;
 
 	private double alfa;
 	private double beta;
@@ -18,14 +19,23 @@ public class Modulo {
 
 
 	public Modulo(){
-		nombre = null;
+		nombre = "";
 		curvas=null;
 	}
 
 	public Modulo(String name) throws ClassNotFoundException {
 		BDConnection baseDatos = new BDConnection();
 		nombre=name;
-		baseDatos.Insert("INSERT INTO MODULO VALUES ('"+name+"')");
+		for(Object[] elemento : baseDatos.Select("SELECT * FROM MODULO WHERE nombreModulo = '"+name+"';")){
+			
+			alfa = (Double.parseDouble(elemento[1].toString()));
+			beta = (Double.parseDouble(elemento[2].toString()));
+			gamma = (Double.parseDouble(elemento[3].toString()));
+			kappa = (Double.parseDouble(elemento[4].toString()));
+	
+		}
+		curvas = new ArrayList<CurvaOriginal>();
+		
 	}
 
 	public Modulo(String n, double a, double b, double g, double k) throws ClassNotFoundException{
@@ -39,7 +49,7 @@ public class Modulo {
 		baseDatos.Insert("INSERT INTO Modulo values (' "+n+"', '"+a+"', '"+b+"', '"+g+"', '"+k+"')");
 
 	}
-	public Modulo(String n, double a, double b, double g, double k,ArrayList<curva> list){
+	public Modulo(String n, double a, double b, double g, double k,ArrayList<CurvaOriginal> list){
 
 		nombre = n;
 		alfa = a;
@@ -50,12 +60,12 @@ public class Modulo {
 
 
 	}
-	public Modulo(String name,ArrayList<curva> list) throws ClassNotFoundException{
+	public Modulo(String name,ArrayList<CurvaOriginal> list) throws ClassNotFoundException{
 
 		this.nombre = name;
 		curvas = list;
 		BDConnection miBD = new BDConnection();
-		Iterator<curva> iter = list.iterator();
+		Iterator<CurvaOriginal> iter = list.iterator();
 
 		while(iter.hasNext()){
 			CurvaOriginal aux = (CurvaOriginal) iter.next();
@@ -81,10 +91,10 @@ public class Modulo {
 			Modulo mod = new Modulo();
 
 			mod.setNombre(elemento[0].toString());
-			mod.setAlfa((Double) elemento[1]);
-			mod.setBeta((Double) elemento[2]);
-			mod.setGamma((Double) elemento[3]);
-			mod.setKappa((Double) elemento[4]);
+			mod.setAlfa(Double.parseDouble(elemento[1].toString()));
+			mod.setBeta(Double.parseDouble(elemento[2].toString()));
+			mod.setGamma(Double.parseDouble(elemento[3].toString()));
+			mod.setKappa(Double.parseDouble(elemento[1].toString()));
 
 			lista.add(mod);
 		}
@@ -97,7 +107,7 @@ public class Modulo {
 		return nombre;
 	}
 
-	public ArrayList<curva> getCurvas() {
+	public ArrayList<CurvaOriginal> getCurvas() {
 		return curvas;
 	}
 
@@ -122,31 +132,31 @@ public class Modulo {
 	public void setNombre(String nombre) throws ClassNotFoundException {
 		this.nombre = nombre;
 		BDConnection miBD = new BDConnection();
-		miBD.Update("UPDATE MODULO SET NOMBREMODULO='"+nombre+"' WHERE NOMBRE='"+this.nombre+"';");
+		miBD.Update("UPDATE MODULO SET NombreModulo='"+nombre+"' WHERE NombreModulo='"+this.nombre+"';");
 	}
 
 	public void setAlfa(double alfa) throws ClassNotFoundException {
 		this.alfa = alfa;
 		BDConnection miBD = new BDConnection();
-		miBD.Update("UPDATE MODULO SET VALORALPHA='"+alfa+"' WHERE NOMBREMODULO='"+nombre+"';");
+		miBD.Update("UPDATE MODULO SET valorAlpha='"+alfa+"' WHERE NombreModulo='"+nombre+"';");
 	}
 
 	public void setBeta(double beta) throws ClassNotFoundException {
 		this.beta = beta;
 		BDConnection miBD = new BDConnection();
-		miBD.Update("UPDATE MODULO SET VALORBETA='"+beta+"' WHERE NOMBREMODULO ='"+nombre+"';");
+		miBD.Update("UPDATE MODULO SET valorBeta='"+beta+"' WHERE NombreModulo='"+nombre+"';");
 	}
 
 	public void setGamma(double gamma) throws ClassNotFoundException {
 		this.gamma = gamma;
 		BDConnection miBD = new BDConnection();
-		miBD.Update("UPDATE MODULO SET VALORGAMMA='"+gamma+"' WHERE NOMBREMODULO ='"+nombre+"';");
+		miBD.Update("UPDATE MODULO SET valorGamma='"+gamma+"' WHERE NombreModulo='"+nombre+"';");
 	}
 
 	public void setKappa(double kappa) throws ClassNotFoundException {
 		this.kappa = kappa;
 		BDConnection miBD = new BDConnection();
-		miBD.Update("UPDATE MODULO SET VALORKAPPA='"+kappa+"' WHERE NOMBREMODULO ='"+nombre+"';");
+		miBD.Update("UPDATE MODULO SET valorKappa='"+kappa+"' WHERE NombreModulo='"+nombre+"';");
 	}
 
 
@@ -160,5 +170,10 @@ public class Modulo {
 		for (curva c : curvas){
 			c.mostrarDatos();
 		}
+	}
+
+	public void setCurva(ArrayList<curva> curvas2) {
+		// TODO Auto-generated method stub
+		
 	}
 }
