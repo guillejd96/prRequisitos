@@ -16,9 +16,12 @@ public class CurvaOriginal implements curva {
     private double VPmax;
     private double FF;
     
+    private double temp;
+    private double irr;
+    
     private String fecha;
 
-    public CurvaOriginal(double isc, double voc, double pmax,double ipmax, double vpmax, double ff, List<parIV> PTS,String date) {
+    public CurvaOriginal(double isc, double voc, double pmax,double ipmax, double vpmax, double ff, List<parIV> PTS,String date,double t, double i) {
     	//los datos entran desde una clase que lea archivos de curva
     	
     	//hay que hacer algo con el id
@@ -30,6 +33,8 @@ public class CurvaOriginal implements curva {
     	this.pts = PTS;
     	this.Voc = voc;
     	this.VPmax = vpmax;
+    	this.temp = t;
+    	this.irr = i;
     	
     	try {
 			BDConnection baseDatos = new BDConnection();
@@ -44,6 +49,26 @@ public class CurvaOriginal implements curva {
     public CurvaOriginal(int i) {
 		// dado un id carga el objeto de la base de datos;
     	idCurva = i;
+	}
+
+    
+	public double getTemp() {
+		return temp;
+	}
+
+
+	public void setTemp(double temp) {
+		this.temp = temp;
+	}
+
+
+	public double getIrr() {
+		return irr;
+	}
+
+
+	public void setIrr(double irr) {
+		this.irr = irr;
 	}
 
 
