@@ -162,14 +162,15 @@ public class ImportarCurva {
 		auxSC.close();
 		sc.close();
 		
-		JOptionPane.showMessageDialog(null,isc+" "+ voc+" "+pmax+" "+ipmax+" "+vpmax+" "+ff+" "+fecha+" "+temp+" "+irr);
+		JOptionPane.showMessageDialog(null,moduleName+" "+isc+" "+ voc+" "+pmax+" "+ipmax+" "+vpmax+" "+ff+" "+fecha+" "+temp+" "+irr);
 
 		
 		BDConnection miBD = new BDConnection();
-		List<Object[]> auxM = miBD.Select("SELECT * FROM MODULO WHERE NOMBREMODULO='"+moduleName+"'");
-
+		List<Object[]> auxM = miBD.Select("SELECT * FROM MODULO WHERE nombreModulo LIKE '"+moduleName+"' ;");
+		JOptionPane.showMessageDialog(null,String.valueOf(auxM.isEmpty()));
+		
 		if(auxM.isEmpty()) { // Si el modulo al que pertenece la curva no esta en la BD
-			Modulo auxModule = new Modulo(moduleName); // Creamos el modulo con solo el nombre
+			Modulo auxModule = new Modulo(moduleName,0,0,0,0); // Creamos el modulo con solo el nombre
 		}
 		CurvaOriginal auxCurva = new CurvaOriginal(isc, voc, pmax,ipmax, vpmax, ff, pares, fecha,temp,irr,moduleName);
 		
