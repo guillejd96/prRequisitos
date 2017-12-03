@@ -131,7 +131,7 @@ public class IntfzImportarModulo extends JFrame {
 //-----TEXTO INFORMATIVO
 		JTextPane txtpnContenido = new JTextPane();
 		txtpnContenido.setBackground(UIManager.getColor("Button.background"));
-		txtpnContenido.setText("bla bla bla");
+		txtpnContenido.setText("Aseguresé de que el archivo tenga la extensión .dat");
 		txtpnContenido.setBounds(10, 84, 357, 118);
 		contentPane.add(txtpnContenido);
 //-----titulo
