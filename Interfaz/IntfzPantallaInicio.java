@@ -365,7 +365,7 @@ public class IntfzPantallaInicio extends JFrame {
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(null, e.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
 		}
 		
 	}//end cargaDatos()
