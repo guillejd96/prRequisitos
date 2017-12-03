@@ -193,7 +193,7 @@ public class CurvaOriginal implements curva {
 	}
 	private int nuevoIDiv() throws ClassNotFoundException{
 		BDConnection baseDatos = new BDConnection();
-		List<Object[]> listaID = baseDatos.Select("SELECT IDCURVA FROM ParIV;");
+		List<Object[]> listaID = baseDatos.Select("SELECT iDParIV FROM ParIV;");
 		int max = 0;
 		for(Object[] aux : listaID){
 			if(max < (int) aux[0]){
