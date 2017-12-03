@@ -87,7 +87,7 @@ public class IntfzModuloElegido {
 		listaDeCurvas = mod.getCurvas();
 		listaDeCurvasACorregir = new ArrayList<CurvaOriginal>();
 		
-		JOptionPane.showMessageDialog(null, mod.getCurvas().size());//devuelve 0 nose porque
+		
 		
 		frame.setTitle("Modulo :"+mod.getNombre());
 
@@ -167,7 +167,7 @@ public class IntfzModuloElegido {
 							if(selected) {
 
 								int id = (int) data[i][8];				//PODRIA DAR FALLO, REVISAR
-								JOptionPane.showMessageDialog(null, id);//debug
+								
 								try {
 									listaDeCurvasACorregir.add( new CurvaOriginal(id) );
 								} catch (ClassNotFoundException e1) {
@@ -289,8 +289,22 @@ public class IntfzModuloElegido {
 				try {
 
 					if(choiceMetodo.getSelectedItem().equals("IEC60891 método 1")) {
-						CurvaCorregida curva_corregida = new CurvaCorregida();
-						//AQUI SE INVOCARÍA EL MÉTODO PARA LLAMAR A LA CURVA
+						//obtenemos la priemra curva
+						Iterator <CurvaOriginal> it = listaDeCurvasACorregir.iterator();
+						CurvaOriginal is = it.next();
+						
+						CurvaCorregida curva_corregida = 
+						Metodo.Metodo1(Double.parseDouble(txtfAlpha.getText()),
+										Double.parseDouble(txtfBetta.getText()), 
+										Double.parseDouble(txtfRs.getText()),
+										Double.parseDouble(txtfKappa.getText()), 
+										is.getIsc(),
+										Double.parseDouble(txtfIrr1.getText()),
+										Double.parseDouble(txtfIrr2.getText()),
+										Double.parseDouble(txtfT1.getText()),
+										Double.parseDouble(txtfT2.getText()),
+										is.getPts());
+						
 						IntfzCurvaCorregida cci = new IntfzCurvaCorregida();
 						cci.newScreen(curva_corregida);
 					}
