@@ -305,7 +305,9 @@ public class IntfzModuloElegido {
 										Double.parseDouble(txtfT2.getText()),
 										is.getPts());
 						
-						IntfzCurvaCorregida cci = new IntfzCurvaCorregida();
+						Iterator<parIV> ish = curva_corregida.getPts().iterator();
+						
+						IntfzCurvaCorregida cci = new IntfzCurvaCorregida(curva_corregida);
 						cci.newScreen(curva_corregida);
 					}
 				}catch(Exception ex) {
