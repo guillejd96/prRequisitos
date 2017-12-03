@@ -74,9 +74,10 @@ public class IntfzCurvaCorregida extends JFrame {
 		int i = 0; //indice sobre el que construiremos la tabla
 		for( parIV pts : curva.getPts()) {
 			data[i][0] = i+1; 			  		//indice
-			data[i][1] = pts.getVoltaje();		//tension
-			data[i][2] = pts.getIntensidad();	//corriente
-			data[i][3] = pts.getVoltaje()*pts.getIntensidad();	//potencia
+			data[i][1] = Math.floor(pts.getVoltaje() * 100000) / 100000;		//tension
+			data[i][2] = Math.floor(pts.getIntensidad() * 100000) / 100000;
+			double pot = pts.getVoltaje()*pts.getIntensidad();	//potencia
+			data[i][3] = Math.floor(pot * 100000) / 100000;
 			i++;
 		}
 		
