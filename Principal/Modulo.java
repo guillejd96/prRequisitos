@@ -34,7 +34,7 @@ public class Modulo {
 			kappa = (Double.parseDouble(elemento[4].toString()));
 	
 		}
-		curvas = new ArrayList<CurvaOriginal>();
+		curvas = getCurvas();
 		
 	}
 
@@ -46,7 +46,7 @@ public class Modulo {
 		gamma = g;
 		kappa = k;
 		BDConnection baseDatos = new BDConnection();
-		baseDatos.Insert("INSERT INTO Modulo values (' "+n+"', '"+a+"', '"+b+"', '"+g+"', '"+k+"')");
+		baseDatos.Insert("INSERT INTO Modulo values (' "+n+"', '"+a+"', '"+b+"', '"+g+"', '"+k+"');");
 
 	}
 	public Modulo(String n, double a, double b, double g, double k,ArrayList<CurvaOriginal> list){
@@ -107,8 +107,14 @@ public class Modulo {
 		return nombre;
 	}
 
-	public ArrayList<CurvaOriginal> getCurvas() {
-		return curvas;
+	public ArrayList<CurvaOriginal> getCurvas() throws ClassNotFoundException {
+		ArrayList<CurvaOriginal> lista = new ArrayList<CurvaOriginal>();
+		BDConnection baseDatos = new BDConnection();
+		for(Object[] elemento : baseDatos.Select("SELECT * FROM curvaOriginal WHERE MODULO_nombreModulo = '"+this.nombre+"' ;")){
+			CurvaOriginal co = new CurvaOriginal( Integer.parseInt(elemento[0].toString()) );
+			lista.add(co);
+		}
+		return lista;
 	}
 
 	public double getAlfa() {
