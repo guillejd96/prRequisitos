@@ -113,7 +113,7 @@ public class IntfzPantallaInicio extends JFrame {
 		txtpnBalBlaBla.setBounds(97, 180, 347, 128);
 		panelInicial.add(txtpnBalBlaBla);
 		txtpnBalBlaBla.setBackground(UIManager.getColor("Button.background"));
-		txtpnBalBlaBla.setText("BAL BLA BLA");
+		txtpnBalBlaBla.setText("Bienvenido a PVTranslator");
 		//-----BOTON LISTA MODULOS
 		btnListaModulo = new JButton("Lista Módulos");
 		btnListaModulo.setBounds(97, 126, 134, 23);
