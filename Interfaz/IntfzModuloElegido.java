@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 import principal.*;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import java.awt.event.ActionListener;
@@ -19,6 +20,7 @@ import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.Choice;
 import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.JTextField;
 
 public class IntfzModuloElegido {
@@ -76,12 +78,16 @@ public class IntfzModuloElegido {
 	private void initialize(String nombreModulo) throws ClassNotFoundException {
 		frame = new JFrame();
 		frame.setBounds(100, 100, 625, 373);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//evita cerrar todo el proyecto
 		frame.getContentPane().setLayout(null);
+		
+		
 		
 		mod = new Modulo(nombreModulo);
 		listaDeCurvas = mod.getCurvas();
 		listaDeCurvasACorregir = new ArrayList<CurvaOriginal>();
+		
+		JOptionPane.showMessageDialog(null, mod.getCurvas().size());//devuelve 0 nose porque
 		
 		frame.setTitle("Modulo :"+mod.getNombre());
 
@@ -94,8 +100,8 @@ public class IntfzModuloElegido {
 		//volcamos los datos en las tablas
 		for(curva c : listaDeCurvas) {
 			CurvaOriginal co = (CurvaOriginal) c;
-			data[i][0] = i+1;		//indice
-			data[i][1] = new Boolean(false);	//este marco indica que curvas se han seleccionasdo
+			data[i][0] = i+1;					//indice
+			data[i][1] = false;					//este marco indica que curvas se han seleccionasdo
 			data[i][2] = co.getIsc();			//Isc
 			data[i][3] = co.getVoc();			//Voc
 			data[i][4] = co.getPmax();			//Pmax
@@ -106,13 +112,42 @@ public class IntfzModuloElegido {
 
 		}
 		
-
+		
 //------PANEL CURVAS	
 		panelCurva = new JPanel();
 		panelCurva.setBounds(0, 0, 609, 334);
 		frame.getContentPane().add(panelCurva);
 		panelCurva.setLayout(null);
-		tablaCurvas = new JTable(data,columnName);
+		DefaultTableModel model = new DefaultTableModel(data, columnName);
+		tablaCurvas = new JTable(model){
+
+            private static final long serialVersionUID = 1L;
+            @Override
+            public Class getColumnClass(int column) {
+                switch (column) {
+                    case 0:
+                        return int.class;
+                    case 1:
+                        return Boolean.class;
+                    case 2:
+                        return double.class;
+                    case 3:
+                        return double.class;
+                    case 4:
+                        return double.class;
+                    case 5:
+                        return double.class;
+                    case 6:
+                        return double.class;
+                    case 7:
+                        return double.class;
+                    case 8:
+                        return int.class;
+                    default:
+                    	return null;
+                }
+            }
+        };
 		tablaCurvas.setBounds(20, 11, 414, 183);
 		
 		
@@ -126,22 +161,33 @@ public class IntfzModuloElegido {
 					public void actionPerformed(ActionEvent e) {
 						//obtener todas las curvas que se han seleccionado
 						for(int i = 0; i < listaDeCurvas.size();i++) {
-							if( data[i][1].equals(Boolean.TRUE)) {
+							//miro si ha sido seleccionada
+							boolean selected = (Boolean) tablaCurvas.getValueAt(i, 1);
+							
+							if(selected) {
 
 								int id = (int) data[i][8];				//PODRIA DAR FALLO, REVISAR
-								listaDeCurvasACorregir.add( new CurvaOriginal(id) );
+								JOptionPane.showMessageDialog(null, id);//debug
+								try {
+									listaDeCurvasACorregir.add( new CurvaOriginal(id) );
+								} catch (ClassNotFoundException e1) {
+									// TODO Auto-generated catch block
+									JOptionPane.showMessageDialog(null, e1.getMessage(),"ERROR!",JOptionPane.ERROR_MESSAGE);
+								}
 								
 							}
 						}
-						//cojo la primera curva y meto sus valores en la segunda pantalla
-						Iterator<CurvaOriginal> ic = listaDeCurvasACorregir.iterator();
-						CurvaOriginal temporal = ic.next();
-						txtfT1.setText(String.valueOf(temporal.getTemp()));
-						txtfIrr1.setText(String.valueOf(temporal.getIrr()));
+						
+						
 						//Si no se selecciona ninguna
 						if(listaDeCurvasACorregir.isEmpty()) {
 							JOptionPane.showMessageDialog(null, "No se han seleccionado curvas", "Aviso",JOptionPane.WARNING_MESSAGE);
 						}else {
+							//cojo la primera curva y meto sus valores en la segunda pantalla
+							Iterator<CurvaOriginal> ic = listaDeCurvasACorregir.iterator();
+							CurvaOriginal temporal = ic.next();
+							txtfT1.setText(String.valueOf(temporal.getTemp()));
+							txtfIrr1.setText(String.valueOf(temporal.getIrr()));
 							panelCurva.setVisible(false);
 							panelCorreccion.setVisible(true);
 						}
@@ -150,7 +196,6 @@ public class IntfzModuloElegido {
 				btnCorregir.setBounds(510, 300, 89, 23);
 				panelCurva.add(btnCorregir);					
 									
-
 
 		//------PANEL CORRECCION
 		panelCorreccion = new JPanel();
@@ -268,7 +313,6 @@ public class IntfzModuloElegido {
 		});
 		btnAtras_correccion.setBounds(10, 300, 89, 23);
 		panelCorreccion.add(btnAtras_correccion);
-
 		
 		JLabel lblT1 = new JLabel("tempOriginal");
 		lblT1.setHorizontalAlignment(SwingConstants.CENTER);
@@ -336,7 +380,6 @@ public class IntfzModuloElegido {
 		
 		
 //-----necesario para la inicializacion
-
 		panelCurva.setVisible(true);
 		panelCorreccion.setVisible(false);
 	}
