@@ -94,7 +94,7 @@ public class Modulo {
 			mod.setAlfa(Double.parseDouble(elemento[1].toString()));
 			mod.setBeta(Double.parseDouble(elemento[2].toString()));
 			mod.setGamma(Double.parseDouble(elemento[3].toString()));
-			mod.setKappa(Double.parseDouble(elemento[1].toString()));
+			mod.setKappa(Double.parseDouble(elemento[4].toString()));
 
 			lista.add(mod);
 		}
