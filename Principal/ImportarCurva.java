@@ -26,7 +26,7 @@ public class ImportarCurva {
 		auxSC= new Scanner(moduleName);
 		auxSC.next();
 		moduleName = auxSC.next();
-		moduleName += auxSC.next();
+		moduleName += " "+auxSC.next();
 		auxSC.close();
 		//System.out.println(moduleName);
 
