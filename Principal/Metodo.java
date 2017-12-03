@@ -1,6 +1,7 @@
 package principal;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Metodo {
 
@@ -8,7 +9,7 @@ public class Metodo {
 
 	}
 
-	public static CurvaCorregida Metodo1(double alfa,double beta,double res,double kappa,double isc,double g1,double g2,double t1,double t2,ArrayList<parIV> pares){
+	public static CurvaCorregida Metodo1(double alfa,double beta,double res,double kappa,double isc,double g1,double g2,double t1,double t2,List<parIV> pares){
 		ArrayList<parIV> newPares = new ArrayList<>();
 
 		for(parIV p : pares){
