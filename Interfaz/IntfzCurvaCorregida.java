@@ -39,7 +39,7 @@ public class IntfzCurvaCorregida extends JFrame {
 				try {
 					 curva = cc;
 					 
-					IntfzCurvaCorregida frame = new IntfzCurvaCorregida();
+					IntfzCurvaCorregida frame = new IntfzCurvaCorregida(cc);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -51,13 +51,15 @@ public class IntfzCurvaCorregida extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public IntfzCurvaCorregida() {
+	public IntfzCurvaCorregida(CurvaCorregida cc) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//evita cerrar el proyecto entero
 		setBounds(100, 100, 450, 522);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
+		 curva = cc;
 		
 		JLabel lblCurvaCorregida = new JLabel("CURVA CORREGIDA");
 		lblCurvaCorregida.setHorizontalAlignment(SwingConstants.CENTER);
@@ -66,7 +68,7 @@ public class IntfzCurvaCorregida extends JFrame {
 		contentPane.add(lblCurvaCorregida);
 		
 		//CONSTRUCCION DE LA TABLA
-		String[] columnName = {"N","TensiÃ³n(V)","Corriente(A)","Potencia(W)"};
+		String[] columnName = {"N","Tensión(V)","Corriente(A)","Potencia(W)"};
 		
 		Object [] [] data= new Object [curva.getPts().size()] [columnName.length];//array de objetos
 		int i = 0; //indice sobre el que construiremos la tabla
