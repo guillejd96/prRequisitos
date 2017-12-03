@@ -52,7 +52,7 @@ public class IntfzCurvaCorregida extends JFrame {
 	 * Create the frame.
 	 */
 	public IntfzCurvaCorregida() {
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//evita cerrar el proyecto entero
 		setBounds(100, 100, 450, 522);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
