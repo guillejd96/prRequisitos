@@ -208,6 +208,7 @@ public class IntfzPantallaInicio extends JFrame {
 				try {
 					me = new IntfzModuloElegido(mod1.getNombre());
 					me.newScreen(mod1.getNombre());
+					
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, e1.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
@@ -245,6 +246,7 @@ public class IntfzPantallaInicio extends JFrame {
 				try {
 					me = new IntfzModuloElegido(mod2.getNombre());
 					me.newScreen(mod2.getNombre());
+					
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, e1.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
@@ -283,6 +285,7 @@ public class IntfzPantallaInicio extends JFrame {
 				try {
 					me = new IntfzModuloElegido(mod3.getNombre());
 					me.newScreen(mod3.getNombre());
+					
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, e1.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
@@ -321,6 +324,7 @@ public class IntfzPantallaInicio extends JFrame {
 				try {
 					me = new IntfzModuloElegido(mod3.getNombre());
 					me.newScreen(mod3.getNombre());
+					
 				} catch (ClassNotFoundException e1) {
 					// TODO Auto-generated catch block
 					JOptionPane.showMessageDialog(null, e1.getMessage(),"Error!",JOptionPane.ERROR_MESSAGE);
