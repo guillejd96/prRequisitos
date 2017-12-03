@@ -26,7 +26,7 @@ public class Modulo {
 	public Modulo(String name) throws ClassNotFoundException {
 		BDConnection baseDatos = new BDConnection();
 		nombre=name;
-		for(Object[] elemento : baseDatos.Select("SELECT * FROM MODULO WHERE nombreModulo = '"+name+"';")){
+		for(Object[] elemento : baseDatos.Select("SELECT * FROM MODULO WHERE nombreModulo LIKE '"+name+"';")){
 			
 			alfa = (Double.parseDouble(elemento[1].toString()));
 			beta = (Double.parseDouble(elemento[2].toString()));
@@ -46,7 +46,7 @@ public class Modulo {
 		gamma = g;
 		kappa = k;
 		BDConnection baseDatos = new BDConnection();
-		baseDatos.Insert("INSERT INTO Modulo values (' "+n+"', '"+a+"', '"+b+"', '"+g+"', '"+k+"');");
+		baseDatos.Insert("INSERT INTO Modulo values ('"+n+"', '"+a+"', '"+b+"', '"+g+"', '"+k+"');");
 
 	}
 	public Modulo(String n, double a, double b, double g, double k,ArrayList<CurvaOriginal> list){
@@ -110,7 +110,7 @@ public class Modulo {
 	public ArrayList<CurvaOriginal> getCurvas() throws ClassNotFoundException {
 		ArrayList<CurvaOriginal> lista = new ArrayList<CurvaOriginal>();
 		BDConnection baseDatos = new BDConnection();
-		for(Object[] elemento : baseDatos.Select("SELECT * FROM curvaOriginal WHERE MODULO_nombreModulo = '"+this.nombre+"' ;")){
+		for(Object[] elemento : baseDatos.Select("SELECT * FROM curvaOriginal WHERE MODULO_nombreModulo LIKE '"+this.nombre+"' ;")){
 			CurvaOriginal co = new CurvaOriginal( Integer.parseInt(elemento[0].toString()) );
 			lista.add(co);
 		}
@@ -136,33 +136,33 @@ public class Modulo {
 	//----- Setters
 
 	public void setNombre(String nombre) throws ClassNotFoundException {
-		this.nombre = nombre;
 		BDConnection miBD = new BDConnection();
-		miBD.Update("UPDATE MODULO SET NombreModulo='"+nombre+"' WHERE NombreModulo='"+this.nombre+"';");
+		miBD.Update("UPDATE MODULO SET NombreModulo ='"+nombre+"' WHERE NombreModulo LIKE'"+this.nombre+"';");
+		this.nombre = nombre;
 	}
 
 	public void setAlfa(double alfa) throws ClassNotFoundException {
 		this.alfa = alfa;
 		BDConnection miBD = new BDConnection();
-		miBD.Update("UPDATE MODULO SET valorAlpha='"+alfa+"' WHERE NombreModulo='"+nombre+"';");
+		miBD.Update("UPDATE MODULO SET valorAlpha='"+alfa+"' WHERE NombreModulo LIKE'"+nombre+"';");
 	}
 
 	public void setBeta(double beta) throws ClassNotFoundException {
 		this.beta = beta;
 		BDConnection miBD = new BDConnection();
-		miBD.Update("UPDATE MODULO SET valorBeta='"+beta+"' WHERE NombreModulo='"+nombre+"';");
+		miBD.Update("UPDATE MODULO SET valorBeta='"+beta+"' WHERE NombreModulo LIKE'"+nombre+"';");
 	}
 
 	public void setGamma(double gamma) throws ClassNotFoundException {
 		this.gamma = gamma;
 		BDConnection miBD = new BDConnection();
-		miBD.Update("UPDATE MODULO SET valorGamma='"+gamma+"' WHERE NombreModulo='"+nombre+"';");
+		miBD.Update("UPDATE MODULO SET valorGamma='"+gamma+"' WHERE NombreModulo LIKE'"+nombre+"';");
 	}
 
 	public void setKappa(double kappa) throws ClassNotFoundException {
 		this.kappa = kappa;
 		BDConnection miBD = new BDConnection();
-		miBD.Update("UPDATE MODULO SET valorKappa='"+kappa+"' WHERE NombreModulo='"+nombre+"';");
+		miBD.Update("UPDATE MODULO SET valorKappa='"+kappa+"' WHERE NombreModulo LIKE'"+nombre+"';");
 	}
 
 
