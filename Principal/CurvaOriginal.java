@@ -1,83 +1,105 @@
 package principal;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Scanner;
+import java.util.TreeMap;
 
 import interfaz.BDConnection;
 
 public class CurvaOriginal implements curva {
-    private List<parIV> pts;
-    
-    private int idCurva;
-	
+
+	private int idCurva;
+
 	private String modName;
-    
-    private double Isc;
-    private double Voc;
-    private double Pmax;
-    private double IPmax;
-    private double VPmax;
-    private double FF;
-    
-    private double temp;
-    private double irr;
-    
-    private String fecha;
 
-   public CurvaOriginal(double isc, double voc, double pmax,double ipmax, double vpmax, double ff, List<parIV> PTS,String date,double t,double i,String mod) throws ClassNotFoundException {
+	private double Isc;
+	private double Voc;
+	private double Pmax;
+	private double IPmax;
+	private double VPmax;
+	private double FF;
 
-		this.fecha = date;
+	private double temp;
+	private double irr;
+
+	private TreeMap<Double,Double> puntos;
+
+	private String fechaHora;
+
+	public CurvaOriginal(double isc, double voc, double pmax,double ipmax, double vpmax, double ff, String vo,String in,String date,String hour,double t,double i,String mod) throws ClassNotFoundException {
+
+		this.fechaHora = date+";"+hour;
 		this.FF = ff;
 		this.Pmax=pmax;
 		this.IPmax = ipmax;
 		this.Isc = isc;
-		this.pts = PTS;
 		this.Voc = voc;
 		this.VPmax = vpmax;
 		this.temp = t;
 		this.irr = i;
-	   this.modName=mod;
-	   int idCurva = nuevoID();
+		this.modName=mod;
+
 		BDConnection baseDatos = new BDConnection();
-		//baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+nuevoID()+",'"+date+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+",'"+mod+"');");
-		baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+idCurva+",'"+date+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+",'"+mod+"');");
-		//hay que dar de alta en la base de datos a los puntos
-		for(parIV par : PTS) {
-			baseDatos.Insert("INSERT INTO ParIV VALUES ("+nuevoIDiv()+", "+par.getIntensidad()+", "+par.getVoltaje()+", "+idCurva+") ;");
+		// baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+nuevoID()+",'"+date+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+",'"+mod+"');");
+		baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+this.fechaHora+","+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+",'"+in+"','"+vo+"','"+mod+"');");
+
+		// Creacion del Map 
+		puntos = new TreeMap<>();
+
+		Scanner sIn = new Scanner(in);
+		Scanner sVo = new Scanner(vo);
+		sIn.useDelimiter(";");
+		sVo.useDelimiter(";");
+
+		while(sVo.hasNext()){
+			double c = sIn.nextDouble();
+			double v = sVo.nextDouble();
+			puntos.put(v, c);
 		}
 
+		sIn.close();
+		sVo.close();
 	}
-    
-    
-    	public CurvaOriginal(int i) throws ClassNotFoundException {
+
+
+	public CurvaOriginal(String fechaCurva,String mod) throws ClassNotFoundException {
 		// dado un id carga el objeto de la base de datos;
-    	idCurva = i;
-    	
-		BDConnection baseDatos = new BDConnection();
-		for(Object[] elemento : baseDatos.Select("SELECT * FROM curvaOriginal WHERE idCurva = "+i+";")){
+		this.fechaHora = fechaCurva;
+		this.modName = mod;
 
-			this.fecha = elemento[1].toString();
-			this.Isc = Double.parseDouble(elemento[2].toString());
-			this.Voc = Double.parseDouble(elemento[3].toString());
-			this.Pmax = Double.parseDouble(elemento[4].toString());
-			this.IPmax = Double.parseDouble(elemento[5].toString());
-			this.VPmax = Double.parseDouble(elemento[6].toString());
-			this.FF = Double.parseDouble(elemento[7].toString());
-			this.temp = Double.parseDouble(elemento[8].toString());
-			this.irr = Double.parseDouble(elemento[9].toString());
-			this.modName = elemento[10].toString();
+		BDConnection baseDatos = new BDConnection();
+		for(Object[] elemento : baseDatos.Select("SELECT * FROM curvaOriginal WHERE fechaHoraCurva = '"+fechaCurva+"' AND nombreModulo = '"+mod+"';")){
+
+			this.Isc = Double.parseDouble(elemento[1].toString());
+			this.Voc = Double.parseDouble(elemento[2].toString());
+			this.Pmax = Double.parseDouble(elemento[3].toString());
+			this.IPmax = Double.parseDouble(elemento[4].toString());
+			this.VPmax = Double.parseDouble(elemento[5].toString());
+			this.FF = Double.parseDouble(elemento[6].toString());
+			this.temp = Double.parseDouble(elemento[7].toString());
+			this.irr = Double.parseDouble(elemento[8].toString());
+			String in = elemento[9].toString();
+			String vo = elemento[10].toString();
+
+			Scanner sIn = new Scanner(in);
+			Scanner sVo = new Scanner(vo);
+			sIn.useDelimiter(";");
+			sVo.useDelimiter(";");
+
+			while(sVo.hasNext()){
+				double c = sIn.nextDouble();
+				double v = sVo.nextDouble();
+				puntos.put(v, c);
+			}
+
+			sIn.close();
+			sVo.close();
 		}
-		//obtener los puntos de la curva
-		List<parIV> list = new ArrayList<parIV>();
-		for(Object[] elemento : baseDatos.Select("SELECT * FROM parIV WHERE curvaOriginal_idCurva = "+i+" ;")) {
-			parIV piv = new parIV(Double.parseDouble(elemento[1].toString())
-									, Double.parseDouble(elemento[2].toString()));
-			list.add(piv);
-		}
-		this.pts = list;
 	}
 
-    
+	public String getModulo(){
+		return modName;
+	}
+
 	public double getTemp() {
 		return temp;
 	}
@@ -98,12 +120,24 @@ public class CurvaOriginal implements curva {
 	}
 
 
-	public List<parIV> getPts() {
-		return pts;
+	public TreeMap<Double,Double> getPts() {
+		return puntos;
 	}
 
-	public void setPts(List<parIV> pts) {
-		this.pts = pts;
+	public void setPts(String v,String i) {
+		Scanner sIn = new Scanner(i);
+		Scanner sVo = new Scanner(v);
+		sIn.useDelimiter(";");
+		sVo.useDelimiter(";");
+
+		while(sVo.hasNext()){
+			double c = sIn.nextDouble();
+			double vo = sVo.nextDouble();
+			puntos.put(vo, c);
+		}
+
+		sIn.close();
+		sVo.close();
 	}
 
 	public double getIsc() {
@@ -155,20 +189,21 @@ public class CurvaOriginal implements curva {
 	}
 
 	public String getFecha() {
-		return fecha;
+		return fechaHora;
 	}
 
 	public void setFecha(String fecha) {
-		this.fecha = fecha;
+		this.fechaHora = fecha;
 	}
 
+	// Este metodo esta desfasado
 	public void mostrarDatos(){
-        int i = 0;
-        for (parIV p : pts){
-            System.out.println("PARIV" + i + "[Intensidad = " + p.getIntensidad() + "] ; [Voltaje = " + p.getVoltaje() + "]");
-            i++;
-        }
-    }
+		int i = 0;
+		for (parIV p : pts){
+			System.out.println("PARIV" + i + "[Intensidad = " + p.getIntensidad() + "] ; [Voltaje = " + p.getVoltaje() + "]");
+			i++;
+		}
+	}
 
 
 	public int getIdCurva() {
@@ -179,28 +214,30 @@ public class CurvaOriginal implements curva {
 	public void setIdCurva(int idCurva) {
 		this.idCurva = idCurva;
 	}
-	
-	private int nuevoID() throws ClassNotFoundException{
-		BDConnection baseDatos = new BDConnection();
-		List<Object[]> listaID = baseDatos.Select("SELECT IDCURVA FROM CURVAORIGINAL;");
-		int max = 0;
-		for(Object[] aux : listaID){
-			if(max < (int) aux[0]){
-				max = (int) aux[0];
-			}
-		}
-		return (max+1);
-	}
-	private int nuevoIDiv() throws ClassNotFoundException{
-		BDConnection baseDatos = new BDConnection();
-		List<Object[]> listaID = baseDatos.Select("SELECT iDParIV FROM ParIV;");
-		int max = 0;
-		for(Object[] aux : listaID){
-			if(max < (int) aux[0]){
-				max = (int) aux[0];
-			}
-		}
-		return (max+1);
-	}
+
+
+	// CON ESTO NO SE QUE PASA AHORA
+	//	private int nuevoID() throws ClassNotFoundException{
+	//		BDConnection baseDatos = new BDConnection();
+	//		List<Object[]> listaID = baseDatos.Select("SELECT IDCURVA FROM CURVAORIGINAL;");
+	//		int max = 0;
+	//		for(Object[] aux : listaID){
+	//			if(max < (int) aux[0]){
+	//				max = (int) aux[0];
+	//			}
+	//		}
+	//		return (max+1);
+	//	}
+	//	private int nuevoIDiv() throws ClassNotFoundException{
+	//		BDConnection baseDatos = new BDConnection();
+	//		List<Object[]> listaID = baseDatos.Select("SELECT idParIV FROM ParIV;");
+	//		int max = 0;
+	//		for(Object[] aux : listaID){
+	//			if(max < (int) aux[0]){
+	//				max = (int) aux[0];
+	//			}
+	//		}
+	//		return (max+1);
+	//	}
 }
 
