@@ -2,11 +2,8 @@ package principal;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import javax.swing.JOptionPane;
 
 import interfaz.BDConnection;
 
@@ -28,7 +25,7 @@ public class ImportarCurva {
 		moduleName = auxSC.next();
 		moduleName += " "+auxSC.next();
 		auxSC.close();
-		//System.out.println(moduleName);
+		System.out.println(moduleName);
 
 		String campanya=sc.nextLine(); // -- Campaña
 		auxSC = new Scanner(campanya);
@@ -135,46 +132,47 @@ public class ImportarCurva {
 		auxSC.close();
 		//System.out.println(nPuntos);
 
-		ArrayList<parIV> pares = new ArrayList<>();
 
 		sc.nextLine();
 		aux = sc.nextLine();
+
+		StringBuilder vol = new StringBuilder();
+		StringBuilder inte = new StringBuilder();
 
 		for(int i=0;i<nPuntos-1;i++){ // -- PUNTOS
 			auxSC = new Scanner(aux);
 			auxSC.next();
 			double vo = auxSC.nextDouble();
 			double in = auxSC.nextDouble();
+			vol.append(vo+";");
+			inte.append(in+";");
 			//System.out.println(vo+" "+in);
 			aux = sc.nextLine();
 			auxSC.close();
-			parIV p = new parIV(in,vo);
-			pares.add(p);
 		}
 
 		auxSC = new Scanner(aux); // -- ULTIMO PUNTO
 		auxSC.next();
 		double vo = auxSC.nextDouble();
 		double in = auxSC.nextDouble();
+		vol.append(vo);
+		inte.append(in);
 		//System.out.println(vo+" "+in);
-		parIV p = new parIV(in, vo);
-		pares.add(p);
 		auxSC.close();
 		sc.close();
-		
-		JOptionPane.showMessageDialog(null,moduleName+" "+isc+" "+ voc+" "+pmax+" "+ipmax+" "+vpmax+" "+ff+" "+fecha+" "+temp+" "+irr);
 
-		
 		BDConnection miBD = new BDConnection();
 		List<Object[]> auxM = miBD.Select("SELECT * FROM MODULO WHERE nombreModulo LIKE '"+moduleName+"' ;");
-		JOptionPane.showMessageDialog(null,String.valueOf(auxM.isEmpty()));
-		
+
 		if(auxM.isEmpty()) { // Si el modulo al que pertenece la curva no esta en la BD
 			Modulo auxModule = new Modulo(moduleName,0,0,0,0); // Creamos el modulo con solo el nombre
 		}
-		CurvaOriginal auxCurva = new CurvaOriginal(isc, voc, pmax,ipmax, vpmax, ff, pares, fecha,temp,irr,moduleName);
-		
-		
+
+		System.out.println(vol.toString());
+		System.out.println(inte.toString());
+
+		CurvaOriginal auxCurva = new CurvaOriginal(isc, voc, pmax,ipmax, vpmax, ff, vol.toString(),inte.toString(), fecha,hora,temp,irr,moduleName);
+
 		return auxCurva;
 	}
 
