@@ -9,6 +9,13 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.data.xy.XYSeries;
+import org.jfree.data.xy.XYSeriesCollection;
+
 import principal.CurvaCorregida;
 import principal.parIV;
 
@@ -22,6 +29,13 @@ import java.util.List;
 import javax.swing.JTable;
 import javax.swing.JScrollBar;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
+import javax.swing.border.TitledBorder;
+import java.awt.Color;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.EtchedBorder;
 
 public class IntfzCurvaCorregida extends JFrame {
 
@@ -29,6 +43,8 @@ public class IntfzCurvaCorregida extends JFrame {
 	//curva
 	private static CurvaCorregida curva;
 	private JTable table;
+	private ChartPanel panelGrafico;
+	private XYSeries seriesA = new XYSeries("par i-v");
 
 	/**
 	 * Launch the application.
@@ -53,7 +69,7 @@ public class IntfzCurvaCorregida extends JFrame {
 	 */
 	public IntfzCurvaCorregida(CurvaCorregida cc) {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//evita cerrar el proyecto entero
-		setBounds(100, 100, 450, 522);
+		setBounds(100, 100, 450, 834);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -68,7 +84,7 @@ public class IntfzCurvaCorregida extends JFrame {
 		contentPane.add(lblCurvaCorregida);
 		
 		//CONSTRUCCION DE LA TABLA
-		String[] columnName = {"N","Tensión(V)","Corriente(A)","Potencia(W)"};
+		String[] columnName = {"N","TensiÃ³n(V)","Corriente(A)","Potencia(W)"};
 		
 		Object [] [] data= new Object [curva.getPts().size()] [columnName.length];//array de objetos
 		int i = 0; //indice sobre el que construiremos la tabla
@@ -79,6 +95,10 @@ public class IntfzCurvaCorregida extends JFrame {
 			double pot = pts.getVoltaje()*pts.getIntensidad();	//potencia
 			data[i][3] = Math.floor(pot * 100000) / 100000;
 			i++;
+			
+			//ESTO ES DE LA REPRESENTACION GRAFICA ASI NO RECORRO LOS PUNTOS 2 VECES
+			seriesA.add(pts.getIntensidad(), pts.getVoltaje());
+			
 		}
 		
 		table = new JTable(data,columnName);
@@ -88,8 +108,29 @@ public class IntfzCurvaCorregida extends JFrame {
 		
 		
 		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setBounds(10, 67, 414, 405);
+		scrollPane.setBounds(10, 354, 414, 431);
 		contentPane.add(scrollPane);
+//-------REPRSENTACION GRAFICA
+		 XYSeriesCollection datasetA = new XYSeriesCollection();
+	        datasetA.addSeries(seriesA);
+
+	        JFreeChart chartA = ChartFactory.createXYLineChart(
+	                "curvaFoltovoltaica", // Título
+	                "Corriente (A)", // Etiqueta Coordenada X
+	                "Tension (V)", // Etiqueta Coordenada Y
+	                datasetA, // Datos
+	                PlotOrientation.VERTICAL,
+	                false, // Muestra la leyenda de los productos (Producto A)
+	                false,
+	                false
+	        );
+			
+		
+		panelGrafico = new ChartPanel(chartA);
+		panelGrafico.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		panelGrafico.setBackground(UIManager.getColor("Button.focus"));
+		panelGrafico.setBounds(10, 67, 414, 276);
+		contentPane.add(panelGrafico);
 		
 		
 		
