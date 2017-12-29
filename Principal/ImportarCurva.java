@@ -171,7 +171,7 @@ public class ImportarCurva {
 		System.out.println(vol.toString());
 		System.out.println(inte.toString());
 
-		CurvaOriginal auxCurva = new CurvaOriginal(isc, voc, pmax,ipmax, vpmax, ff, vol.toString(),inte.toString(), fecha,hora,temp,irr,moduleName);
+		CurvaOriginal auxCurva = new CurvaOriginal(isc, voc, pmax,ipmax, vpmax, ff, vol.toString(),inte.toString(), fecha,hora,campanya,moduleName);
 
 		return auxCurva;
 	}
