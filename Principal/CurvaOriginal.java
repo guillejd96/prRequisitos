@@ -75,7 +75,7 @@ public class CurvaOriginal implements curva {
 			this.FF = Double.parseDouble(elemento[6].toString());
 			String in = elemento[7].toString();
 			String vo = elemento[8].toString();
-			
+
 			this.campName = elemento[9].toString();
 
 			Scanner sIn = new Scanner(in);
@@ -93,11 +93,6 @@ public class CurvaOriginal implements curva {
 			sVo.close();
 		}
 	}
-
-	public String getModulo(){
-		return modName;
-	}
-
 
 	public TreeMap<Double,Double> getPts() {
 		return puntos;
@@ -117,6 +112,10 @@ public class CurvaOriginal implements curva {
 
 		sIn.close();
 		sVo.close();
+	}
+
+	public String getFechaHora(){
+		return fechaHora;
 	}
 
 	public double getIsc() {
@@ -174,7 +173,7 @@ public class CurvaOriginal implements curva {
 	public void setFecha(String fecha) {
 		this.fechaHora = fecha;
 	}
-	
+
 
 	public String getModName() {
 		return modName;
