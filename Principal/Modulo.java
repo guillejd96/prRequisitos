@@ -27,15 +27,14 @@ public class Modulo {
 		BDConnection baseDatos = new BDConnection();
 		nombre=name;
 		for(Object[] elemento : baseDatos.Select("SELECT * FROM MODULO WHERE nombreModulo LIKE '"+name+"';")){
-			
+
 			alfa = (Double.parseDouble(elemento[1].toString()));
 			beta = (Double.parseDouble(elemento[2].toString()));
 			gamma = (Double.parseDouble(elemento[3].toString()));
 			kappa = (Double.parseDouble(elemento[4].toString()));
-	
+
 		}
-		curvas = getCurvas();
-		
+
 	}
 
 	public Modulo(String n, double a, double b, double g, double k) throws ClassNotFoundException{
@@ -107,16 +106,6 @@ public class Modulo {
 		return nombre;
 	}
 
-	public ArrayList<CurvaOriginal> getCurvas() throws ClassNotFoundException {
-		ArrayList<CurvaOriginal> lista = new ArrayList<CurvaOriginal>();
-		BDConnection baseDatos = new BDConnection();
-		for(Object[] elemento : baseDatos.Select("SELECT * FROM curvaOriginal WHERE MODULO_nombreModulo LIKE '"+this.nombre+"' ;")){
-			CurvaOriginal co = new CurvaOriginal( Integer.parseInt(elemento[0].toString()) );
-			lista.add(co);
-		}
-		return lista;
-	}
-
 	public double getAlfa() {
 		return alfa;
 	}
@@ -133,7 +122,7 @@ public class Modulo {
 		return kappa;
 	}
 
-	//----- Setters
+	// ----- Setters
 
 	public void setNombre(String nombre) throws ClassNotFoundException {
 		BDConnection miBD = new BDConnection();
@@ -180,6 +169,6 @@ public class Modulo {
 
 	public void setCurva(ArrayList<curva> curvas2) {
 		// TODO Auto-generated method stub
-		
+
 	}
 }
