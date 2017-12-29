@@ -30,8 +30,16 @@ public class Campanya {
 		miBD.Insert("insert into campanya values ('"+nombreCampanya+"','"+mod.getNombre()+"');");
 	}
 
-	public ArrayList<CurvaOriginal> getCurvas(){
-		return curvas;
+	public static ArrayList<CurvaOriginal> getCurvas(String mod,String camp) throws ClassNotFoundException{
+		
+		ArrayList<CurvaOriginal> lista = new ArrayList<CurvaOriginal>();
+		BDConnection miBD = new BDConnection();
+		for(Object[] tupla: miBD.Select("SELECT fechaHoraCurva FROM curvaOriginal WHERE"
+				+ " campanya_nombreCampanya = '"+camp +"' AND campanya_nombreModulo= '"+mod+"' ;")){
+			lista.add( new CurvaOriginal(tupla[0].toString(), mod) );
+		}
+		
+		return lista ;
 	}
 
 	public int addNewCurva(CurvaOriginal c){
