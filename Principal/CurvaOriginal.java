@@ -1,5 +1,6 @@
 package principal;
 
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.TreeMap;
 
@@ -37,8 +38,13 @@ public class CurvaOriginal implements curva {
 		this.modName=mod;
 
 		BDConnection baseDatos = new BDConnection();
+		//si la campanya no existe crearla
+		if(baseDatos.Select("SELECT * FROM campanya WHERE nombreCampanya = '"+camp+"' AND Modulo_nombreModulo= '"+mod+"';").isEmpty()){
+			Campanya campa = new Campanya(camp, new Modulo(mod));
+			
+		}
 		// baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+nuevoID()+",'"+date+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+",'"+mod+"');");
-		baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+this.fechaHora+","+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+",'"+in+"','"+vo+"','"+camp+"','"+mod+"');");
+		baseDatos.Insert("INSERT INTO curvaOriginal VALUES('"+this.fechaHora+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+",'"+in+"','"+vo+"','"+camp+"','"+mod+"');");
 
 		// Creacion del Map 
 		puntos = new TreeMap<>();
@@ -49,8 +55,9 @@ public class CurvaOriginal implements curva {
 		sVo.useDelimiter(";");
 
 		while(sVo.hasNext()){
-			double c = sIn.nextDouble();
-			double v = sVo.nextDouble();
+			double c = Double.parseDouble(sIn.next());
+			double v = Double.parseDouble(sVo.next());
+			
 			puntos.put(v, c);
 		}
 
@@ -65,7 +72,7 @@ public class CurvaOriginal implements curva {
 		this.modName = mod;
 
 		BDConnection baseDatos = new BDConnection();
-		for(Object[] elemento : baseDatos.Select("SELECT * FROM curvaOriginal WHERE fechaHoraCurva = '"+fechaCurva+"' AND nombreModulo = '"+mod+"';")){
+		for(Object[] elemento : baseDatos.Select("SELECT * FROM curvaOriginal WHERE fechaHoraCurva = '"+fechaCurva+"' AND campanya_nombreModulo = '"+mod+"';")){
 
 			this.Isc = Double.parseDouble(elemento[1].toString());
 			this.Voc = Double.parseDouble(elemento[2].toString());
@@ -75,19 +82,27 @@ public class CurvaOriginal implements curva {
 			this.FF = Double.parseDouble(elemento[6].toString());
 			String in = elemento[7].toString();
 			String vo = elemento[8].toString();
+			
 
 			this.campName = elemento[9].toString();
+			
+			// Creacion del Map 
+			puntos = new TreeMap<>();
 
 			Scanner sIn = new Scanner(in);
 			Scanner sVo = new Scanner(vo);
+			
 			sIn.useDelimiter(";");
 			sVo.useDelimiter(";");
 
 			while(sVo.hasNext()){
-				double c = sIn.nextDouble();
-				double v = sVo.nextDouble();
+				
+				double c = Double.parseDouble(sIn.next());
+				double v = Double.parseDouble(sVo.next());
+				
 				puntos.put(v, c);
 			}
+			
 
 			sIn.close();
 			sVo.close();
@@ -112,10 +127,6 @@ public class CurvaOriginal implements curva {
 
 		sIn.close();
 		sVo.close();
-	}
-
-	public String getFechaHora(){
-		return fechaHora;
 	}
 
 	public double getIsc() {
@@ -212,6 +223,12 @@ public class CurvaOriginal implements curva {
 
 	public void setIdCurva(int idCurva) {
 		this.idCurva = idCurva;
+	}
+
+
+	public String getFechaHora() {
+		
+		return fechaHora;
 	}
 
 
