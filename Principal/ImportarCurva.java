@@ -106,8 +106,19 @@ public class ImportarCurva {
 		auxSC.close();
 		//System.out.println(temp);
 
-		sc.nextLine(); // Itero hasta la linea 25
-		sc.nextLine();
+		aux = sc.nextLine(); // -- TEMPERATURA AMBIENTE INICIAL
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		auxSC.next();
+		double tempInic = auxSC.nextDouble();
+		auxSC.close();
+
+		sc.nextLine(); // -- TEMPERATURA AMBIENTE FINAL
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		auxSC.next();
+		double tempFin = auxSC.nextDouble();
+		auxSC.close();
 
 		aux = sc.nextLine(); // -- IRRADIANCIA
 		auxSC = new Scanner(aux);
@@ -117,7 +128,21 @@ public class ImportarCurva {
 		auxSC.close();
 		//System.out.println(irr);
 
-		for(int k=0;k<9;k++){ // Itero hasta la linea 35
+		aux = sc.nextLine(); // -- IRRADIANCIA INICIAL
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		auxSC.next();
+		double irrInic = auxSC.nextDouble();
+		auxSC.close();
+
+		aux = sc.nextLine(); // -- IRRADIANCIA FINAL
+		auxSC = new Scanner(aux);
+		auxSC.next();
+		auxSC.next();
+		double irrFin = auxSC.nextDouble();
+		auxSC.close();
+
+		for(int k=0;k<7;k++){ // Itero hasta la linea 35
 			sc.nextLine();
 		}
 
