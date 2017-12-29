@@ -1,7 +1,7 @@
 package principal;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class Metodo {
 
@@ -9,16 +9,37 @@ public class Metodo {
 
 	}
 
-	public static CurvaCorregida Metodo1(double alfa,double beta,double res,double kappa,double isc,double g1,double g2,double t1,double t2,List<parIV> pares){
+	public static CurvaCorregida Metodo1(double alfa,double beta,double res,double kappa,double isc,double g1,double g2,double t1,double t2,TreeMap<Double,Double> puntos) throws ClassNotFoundException{
 		String in="",vo="";
-		for(parIV p : pares){
-			double i2 = p.getIntensidad() + isc * ( (g2/g1) - 1 ) + alfa * (t2-t1); // Formula para I2[i]
-			double v2 = p.getVoltaje() - res * (i2-p.getIntensidad()) - kappa * i2 * (t2-t1) + beta * (t2-t1); // Formula para V2[i]
+		double pmax=0,ipmax=0,vpmax=0,isc2=0,voc2=0,difISC=Double.MAX_VALUE,difVOC=Double.MAX_VALUE;
+		for(Entry<Double, Double> aux : puntos.entrySet()){
+			double i2 = aux.getValue() + isc * ( (g2/g1) - 1 ) + alfa * (t2-t1); // Formula para I2[i]
+			double v2 = aux.getKey() - res * (i2-aux.getValue()) - kappa * i2 * (t2-t1) + beta * (t2-t1); // Formula para V2[i]
 			in+=i2+";";
 			vo+=v2+";";
+			if(pmax<(i2*v2)){ // Saca los valores de IPMAX,VPMAX,PMAX
+				pmax = i2*v2;
+				ipmax=i2;
+				vpmax=v2;
+			}
+
+			double auxI = Math.abs(i2);
+			if(difISC>auxI) { // Saca la VOC
+				difISC=auxI;
+				voc2 = v2;
+			}
+			double auxV = Math.abs(v2);
+			if(difVOC>auxV) { // Saca la ISC
+				difVOC=auxV;
+				isc2=i2;
+			}
+
 		}
 
-		CurvaCorregida cc = new CurvaCorregida(in,vo); // AQUI HAY QUE TOCAR COSAS
+		double ff = 100 * (pmax/(isc2*voc2)); // Saca el FF
+
+
+		CurvaCorregida cc = new CurvaCorregida(null,isc2,voc2,pmax,ipmax,vpmax,ff,in,vo); // NULL PORQUE NO SE DE DONDE SACAR LA CURVA ORIGINAL
 
 		return cc;
 	}
