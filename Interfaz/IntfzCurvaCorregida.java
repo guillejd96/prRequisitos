@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JTable;
 import javax.swing.JScrollBar;
@@ -87,18 +88,19 @@ public class IntfzCurvaCorregida extends JFrame {
 		String[] columnName = {"N","TensiÃ³n(V)","Corriente(A)","Potencia(W)"};
 		
 		Object [] [] data= new Object [curva.getPts().size()] [columnName.length];//array de objetos
-		int i = 0; //indice sobre el que construiremos la tabla
-		for( parIV pts : curva.getPts()) {
-			data[i][0] = i+1; 			  		//indice
-			data[i][1] = Math.floor(pts.getVoltaje() * 100000) / 100000;		//tension
-			data[i][2] = Math.floor(pts.getIntensidad() * 100000) / 100000;
-			double pot = pts.getVoltaje()*pts.getIntensidad();	//potencia
-			data[i][3] = Math.floor(pot * 100000) / 100000;
+		int i = 0;
+		for( Entry<Double, Double> pt : curva.getPts().entrySet()){
+			//parte de la tabla
+			double pot = pt.getKey()*pt.getValue();	//potencia
+			data[i][0] = i+1;
+			data[i][1] = Math.floor(pt.getKey() * 100000) / 100000;
+			data[i][2] = Math.floor(pt.getValue() * 100000) / 100000;
+			data[i][3] = pot;
+			
 			i++;
 			
-			//ESTO ES DE LA REPRESENTACION GRAFICA ASI NO RECORRO LOS PUNTOS 2 VECES
-			seriesA.add(pts.getIntensidad(), pts.getVoltaje());
-			
+			//parte grafica
+			seriesA.add(pt.getKey(), pt.getValue());
 		}
 		
 		table = new JTable(data,columnName);
