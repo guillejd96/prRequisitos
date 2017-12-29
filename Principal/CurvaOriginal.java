@@ -10,6 +10,7 @@ public class CurvaOriginal implements curva {
 	private int idCurva;
 
 	private String modName;
+	private String campName;
 
 	private double Isc;
 	private double Voc;
@@ -18,14 +19,12 @@ public class CurvaOriginal implements curva {
 	private double VPmax;
 	private double FF;
 
-	private double temp;
-	private double irr;
 
 	private TreeMap<Double,Double> puntos;
 
 	private String fechaHora;
 
-	public CurvaOriginal(double isc, double voc, double pmax,double ipmax, double vpmax, double ff, String vo,String in,String date,String hour,double t,double i,String mod) throws ClassNotFoundException {
+	public CurvaOriginal(double isc, double voc, double pmax,double ipmax, double vpmax, double ff, String vo,String in,String date,String hour,String camp,String mod) throws ClassNotFoundException {
 
 		this.fechaHora = date+";"+hour;
 		this.FF = ff;
@@ -34,13 +33,12 @@ public class CurvaOriginal implements curva {
 		this.Isc = isc;
 		this.Voc = voc;
 		this.VPmax = vpmax;
-		this.temp = t;
-		this.irr = i;
+		this.campName = camp;
 		this.modName=mod;
 
 		BDConnection baseDatos = new BDConnection();
 		// baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+nuevoID()+",'"+date+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+",'"+mod+"');");
-		baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+this.fechaHora+","+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+",'"+in+"','"+vo+"','"+mod+"');");
+		baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+this.fechaHora+","+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+",'"+in+"','"+vo+"','"+camp+"','"+mod+"');");
 
 		// Creacion del Map 
 		puntos = new TreeMap<>();
@@ -75,10 +73,10 @@ public class CurvaOriginal implements curva {
 			this.IPmax = Double.parseDouble(elemento[4].toString());
 			this.VPmax = Double.parseDouble(elemento[5].toString());
 			this.FF = Double.parseDouble(elemento[6].toString());
-			this.temp = Double.parseDouble(elemento[7].toString());
-			this.irr = Double.parseDouble(elemento[8].toString());
-			String in = elemento[9].toString();
-			String vo = elemento[10].toString();
+			String in = elemento[7].toString();
+			String vo = elemento[8].toString();
+			
+			this.campName = elemento[9].toString();
 
 			Scanner sIn = new Scanner(in);
 			Scanner sVo = new Scanner(vo);
@@ -98,25 +96,6 @@ public class CurvaOriginal implements curva {
 
 	public String getModulo(){
 		return modName;
-	}
-
-	public double getTemp() {
-		return temp;
-	}
-
-
-	public void setTemp(double temp) {
-		this.temp = temp;
-	}
-
-
-	public double getIrr() {
-		return irr;
-	}
-
-
-	public void setIrr(double irr) {
-		this.irr = irr;
 	}
 
 
@@ -195,6 +174,27 @@ public class CurvaOriginal implements curva {
 	public void setFecha(String fecha) {
 		this.fechaHora = fecha;
 	}
+	
+
+	public String getModName() {
+		return modName;
+	}
+
+
+	public void setModName(String modName) {
+		this.modName = modName;
+	}
+
+
+	public String getCampName() {
+		return campName;
+	}
+
+
+	public void setCampName(String campName) {
+		this.campName = campName;
+	}
+
 
 	// Este metodo esta desfasado
 	public void mostrarDatos(){
