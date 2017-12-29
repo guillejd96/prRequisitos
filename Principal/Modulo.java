@@ -99,6 +99,18 @@ public class Modulo {
 		}
 		return lista;
 	}
+	public  List<String> ListaCampanyas() throws ClassNotFoundException{
+		BDConnection miBD = new BDConnection();
+		ArrayList<String> lista = new ArrayList<String>();
+		
+		for(Object[] elemento : miBD.Select("SELECT nombreCampanya FROM campanya where Modulo_nombreModulo = '" + nombre + "';")){
+			
+			lista.add(elemento[0].toString());
+			
+			
+		}
+		return lista;
+	}
 
 	//---- Getters
 
