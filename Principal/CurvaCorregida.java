@@ -30,6 +30,9 @@ public class CurvaCorregida implements curva {
 		this.ff=f;
 
 		int nuevoId = nuevoID(c.getFechaHora());
+		
+		// Creacion del Map 
+		puntos = new TreeMap<>();
 
 		Scanner sIn = new Scanner(intens);
 		Scanner sVo = new Scanner(volt);
@@ -37,8 +40,8 @@ public class CurvaCorregida implements curva {
 		sVo.useDelimiter(";");
 
 		while(sVo.hasNext()){
-			double aux1 = sIn.nextDouble();
-			double aux2 = sVo.nextDouble();
+			double aux1 = Double.parseDouble(sIn.next());
+			double aux2 = Double.parseDouble(sVo.next());
 			puntos.put(aux2, aux1);
 		}
 
@@ -47,6 +50,43 @@ public class CurvaCorregida implements curva {
 
 		BDConnection miBD = new BDConnection();
 		miBD.Insert("insert into curvaCorregida values ("+nuevoId+","+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+",'"+intens+"','"+volt+"','"+c.getFechaHora()+"','"+c.getCampName()+"','"+c.getModName()+"');");
+	}
+	public CurvaCorregida(int id) throws ClassNotFoundException{
+		BDConnection miBD = new BDConnection();
+		String in= "";//string con intensidades
+		String vo= "";//string con voltajes
+		for(Object[] elemento : miBD.Select("SELECT * FROM curvaCorregida WHERE idCurvaCorregida = "+id+" ;")){
+			this.idCurvaCorregida = Integer.parseInt(elemento[0].toString());
+			this.isc = Double.parseDouble(elemento[1].toString());
+			this.voc = Double.parseDouble(elemento[2].toString());
+			this.pmax = Double.parseDouble(elemento[3].toString());
+			this.ipmax = Double.parseDouble(elemento[4].toString());
+			this.vpmax = Double.parseDouble(elemento[5].toString());
+			this.ff = Double.parseDouble(elemento[6].toString());
+			in = elemento[7].toString();
+			vo = elemento[8].toString();
+			this.origen = new CurvaOriginal(elemento[7].toString(),elemento[9].toString());//el origen se accede con su hora y el nombre del modulo
+		}
+		// Creacion del Map 
+		puntos = new TreeMap<>();
+
+		Scanner sIn = new Scanner(in);
+		Scanner sVo = new Scanner(vo);
+		
+		sIn.useDelimiter(";");
+		sVo.useDelimiter(";");
+
+		while(sVo.hasNext()){
+			
+			double c = Double.parseDouble(sIn.next());
+			double v = Double.parseDouble(sVo.next());
+			
+			puntos.put(v, c);
+		}
+		
+
+		sIn.close();
+		sVo.close();
 	}
 
 	public TreeMap<Double,Double> getPts() {
@@ -60,8 +100,8 @@ public class CurvaCorregida implements curva {
 		sVo.useDelimiter(";");
 
 		while(sVo.hasNext()){
-			double c = sIn.nextDouble();
-			double v = sVo.nextDouble();
+			double c = Double.parseDouble(sIn.next());
+			double v = Double.parseDouble(sVo.next());
 			puntos.put(v, c);
 		}
 
