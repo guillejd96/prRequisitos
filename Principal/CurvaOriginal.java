@@ -22,6 +22,8 @@ public class CurvaOriginal implements curva {
 	private double VPmax;
 	private double FF;
 
+	private Canal velViento,dirViento,humedad,temperatura,irradiancia,rtd,celula;
+
 
 	private TreeMap<Double,Double> puntos;
 
@@ -43,7 +45,7 @@ public class CurvaOriginal implements curva {
 		//si la campanya no existe crearla
 		if(baseDatos.Select("SELECT * FROM campanya WHERE nombreCampanya = '"+camp+"' AND Modulo_nombreModulo= '"+mod+"';").isEmpty()){
 			Campanya campa = new Campanya(camp, new Modulo(mod));
-			
+
 		}
 		// baseDatos.Insert("INSERT INTO CURVAORIGINAL VALUES("+nuevoID()+",'"+date+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+","+t+","+i+",'"+mod+"');");
 		baseDatos.Insert("INSERT INTO curvaOriginal VALUES('"+this.fechaHora+"',"+isc+","+voc+","+pmax+","+ipmax+","+vpmax+","+ff+",'"+in+"','"+vo+"','"+camp+"','"+mod+"');");
@@ -59,7 +61,7 @@ public class CurvaOriginal implements curva {
 		while(sVo.hasNext()){
 			double c = Double.parseDouble(sIn.next());
 			double v = Double.parseDouble(sVo.next());
-			
+
 			puntos.put(v, c);
 		}
 
@@ -84,27 +86,27 @@ public class CurvaOriginal implements curva {
 			this.FF = Double.parseDouble(elemento[6].toString());
 			String in = elemento[7].toString();
 			String vo = elemento[8].toString();
-			
+
 
 			this.campName = elemento[9].toString();
-			
+
 			// Creacion del Map 
 			puntos = new TreeMap<>();
 
 			Scanner sIn = new Scanner(in);
 			Scanner sVo = new Scanner(vo);
-			
+
 			sIn.useDelimiter(";");
 			sVo.useDelimiter(";");
 
 			while(sVo.hasNext()){
-				
+
 				double c = Double.parseDouble(sIn.next());
 				double v = Double.parseDouble(sVo.next());
-				
+
 				puntos.put(v, c);
 			}
-			
+
 
 			sIn.close();
 			sVo.close();
@@ -114,12 +116,12 @@ public class CurvaOriginal implements curva {
 	public  List<CurvaCorregida> listaDeCurvasCorregidas() throws ClassNotFoundException{
 		BDConnection miBD = new BDConnection();
 		ArrayList<CurvaCorregida> lista = new ArrayList<CurvaCorregida>();
-		
+
 		for(Object[] elemento : miBD.Select("SELECT idCurvaCorregida FROM curvaCorregida where curvaOriginal_fechaHoraCruva = '" + fechaHora + "' AND curvaOriginal_campanya_nombreModulo = '"+modName+"' ;")){
-			
+
 			lista.add( new CurvaCorregida( Integer.parseInt(elemento[0].toString()) ) );
-			
-			
+
+
 		}
 		return null;
 	}
@@ -242,8 +244,28 @@ public class CurvaOriginal implements curva {
 
 
 	public String getFechaHora() {
-		
+
 		return fechaHora;
+	}
+
+
+	public void setCanal(Canal cVelocidadViento, Canal cDireccionViento, Canal cHumedad, Canal cTemperatura,
+			Canal cIrradiancia, Canal cRTD, Canal cCelula) {
+		this.velViento=cVelocidadViento;
+		this.dirViento=cDireccionViento;
+		this.humedad=cHumedad;
+		this.temperatura=cTemperatura;
+		this.irradiancia=cIrradiancia;
+		this.rtd=cRTD;
+		this.celula=cCelula;
+
+		this.velViento.setCurvaOriginal(this);
+		this.dirViento.setCurvaOriginal(this);
+		this.humedad.setCurvaOriginal(this);
+		this.temperatura.setCurvaOriginal(this);
+		this.irradiancia.setCurvaOriginal(this);
+		this.rtd.setCurvaOriginal(this);
+		this.celula.setCurvaOriginal(this);
 	}
 
 
@@ -271,4 +293,3 @@ public class CurvaOriginal implements curva {
 	//		return (max+1);
 	//	}
 }
-
