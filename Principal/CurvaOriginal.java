@@ -1,5 +1,7 @@
 package principal;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Scanner;
 import java.util.TreeMap;
@@ -107,6 +109,19 @@ public class CurvaOriginal implements curva {
 			sIn.close();
 			sVo.close();
 		}
+	}
+
+	public  List<CurvaCorregida> listaDeCurvasCorregidas() throws ClassNotFoundException{
+		BDConnection miBD = new BDConnection();
+		ArrayList<CurvaCorregida> lista = new ArrayList<CurvaCorregida>();
+		
+		for(Object[] elemento : miBD.Select("SELECT idCurvaCorregida FROM curvaCorregida where curvaOriginal_fechaHoraCruva = '" + fechaHora + "' AND curvaOriginal_campanya_nombreModulo = '"+modName+"' ;")){
+			
+			lista.add( new CurvaCorregida( Integer.parseInt(elemento[0].toString()) ) );
+			
+			
+		}
+		return null;
 	}
 
 	public TreeMap<Double,Double> getPts() {
