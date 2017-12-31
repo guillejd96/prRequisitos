@@ -88,6 +88,28 @@ public class CurvaCorregida implements curva {
 		sIn.close();
 		sVo.close();
 	}
+	
+	public int getIdCurvaCorregida() {
+		return idCurvaCorregida;
+	}
+	public double getIsc() {
+		return isc;
+	}
+	public double getVoc() {
+		return voc;
+	}
+	public double getPmax() {
+		return pmax;
+	}
+	public double getIpmax() {
+		return ipmax;
+	}
+	public double getVpmax() {
+		return vpmax;
+	}
+	public double getFf() {
+		return ff;
+	}
 
 	public TreeMap<Double,Double> getPts() {
 		return puntos;
