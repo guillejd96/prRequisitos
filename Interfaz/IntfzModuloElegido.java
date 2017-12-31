@@ -259,7 +259,19 @@ public class IntfzModuloElegido {
 		menuItemVer.addActionListener(new ActionListener() {
 			//que se hace al seleccionar este item
             public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(frame, "New File clicked!");
+            	int seleccion = tablaCurvas.getSelectedRow();
+            	CurvaOriginal a;
+				try {
+					a = new CurvaOriginal(tablaCurvas.getValueAt(seleccion, 1).toString(), mod.getNombre() );
+					System.out.println(a.listaDeCurvasCorregidas());
+					IntfzListaCurvasCorregidas lcc = new IntfzListaCurvasCorregidas(a);
+					lcc.newScreen(a);
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+            	
+                
             }
         });
 		popupMenu.add(menuItemVer);
