@@ -17,7 +17,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
 import principal.CurvaCorregida;
-import principal.parIV;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
