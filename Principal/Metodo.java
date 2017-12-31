@@ -9,9 +9,10 @@ public class Metodo {
 
 	}
 
-	public static CurvaCorregida Metodo1(double alfa,double beta,double res,double kappa,double isc,double g1,double g2,double t1,double t2,TreeMap<Double,Double> puntos) throws ClassNotFoundException{
+	public static CurvaCorregida Metodo1(double alfa,double beta,double res,double kappa,double isc,double g1,double g2,double t1,double t2,CurvaOriginal co) throws ClassNotFoundException{
 		String in="",vo="";
 		double pmax=0,ipmax=0,vpmax=0,isc2=0,voc2=0,difISC=Double.MAX_VALUE,difVOC=Double.MAX_VALUE;
+		TreeMap<Double,Double> puntos = co.getPts();
 		for(Entry<Double, Double> aux : puntos.entrySet()){
 			double i2 = aux.getValue() + isc * ( (g2/g1) - 1 ) + alfa * (t2-t1); // Formula para I2[i]
 			double v2 = aux.getKey() - res * (i2-aux.getValue()) - kappa * i2 * (t2-t1) + beta * (t2-t1); // Formula para V2[i]
@@ -39,7 +40,7 @@ public class Metodo {
 		double ff = 100 * (pmax/(isc2*voc2)); // Saca el FF
 
 
-		CurvaCorregida cc = new CurvaCorregida(null,isc2,voc2,pmax,ipmax,vpmax,ff,in,vo); // NULL PORQUE NO SE DE DONDE SACAR LA CURVA ORIGINAL
+		CurvaCorregida cc = new CurvaCorregida(co,isc2,voc2,pmax,ipmax,vpmax,ff,in,vo); // NULL PORQUE NO SE DE DONDE SACAR LA CURVA ORIGINAL
 
 		return cc;
 	}
