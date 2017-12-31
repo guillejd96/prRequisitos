@@ -94,7 +94,7 @@ public class IntfzPantallaInicio extends JFrame {
 		Image logoPyromik = new ImageIcon(this.getClass().getResource("/Images/pyromikLogo.jpg")).getImage();
 		
 				JPanel panelInicial = new JPanel();
-				panelInicial.setBounds(467, 247, 62, 45);
+				panelInicial.setBounds(0, 0, 529, 292);
 				contentPane.add(panelInicial);
 				panelInicial.setLayout(null);
 				//------TEXTO DE ABAJO		
@@ -156,7 +156,7 @@ public class IntfzPantallaInicio extends JFrame {
 								panelInicial.setVisible(true);
 		//------PANEL DE MODULO
 		panelModulo = new JPanel();
-		panelModulo.setBounds(0, 259, 51, 33);
+		panelModulo.setBounds(0, 0, 529, 292);
 		contentPane.add(panelModulo);
 		panelModulo.setLayout(null);
 		panelModulo.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -306,8 +306,8 @@ public class IntfzPantallaInicio extends JFrame {
 								mod.setGamma(Double.parseDouble(textField_gamma.getText()));
 								mod.setKappa(Double.parseDouble(textField_kappa.getText()));
 								
-								panelModulo.setVisible(false);
-								panelEditar.setVisible(true);
+								panelModulo.setVisible(true);
+								panelEditar.setVisible(false);
 								
 							} catch (ClassNotFoundException e1) {
 								// TODO Auto-generated catch block
@@ -320,6 +320,12 @@ public class IntfzPantallaInicio extends JFrame {
 				
 				
 				JButton btnAtrs = new JButton("Atr\u00E1s");
+				btnAtrs.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent arg0) {
+						panelModulo.setVisible(true);
+						panelEditar.setVisible(false);
+					}
+				});
 				btnAtrs.setBounds(139, 258, 89, 23);
 				panelEditar.add(btnAtrs);
 				
