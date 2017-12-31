@@ -3,6 +3,8 @@ package interfaz;
 import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -11,6 +13,7 @@ import javax.swing.JPanel;
 import principal.*;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JTable;
@@ -39,6 +42,8 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLayeredPane;
 import javax.swing.border.EtchedBorder;
 import java.awt.ScrollPane;
+import javax.swing.border.TitledBorder;
+import javax.swing.JList;
 
 public class IntfzModuloElegido {
 
@@ -48,6 +53,7 @@ public class IntfzModuloElegido {
 	private JTable tablaCurvas;
 	private ArrayList<CurvaOriginal> listaDeCurvas; 		//curvas seleccionadas en la campaÃ±a
 	private ArrayList<CurvaOriginal> listaDeCurvasACorregir;//curvas seleccionadas para corregir
+	
 
 	JPanel panelCurva;
 	JPanel panelCorreccion;
@@ -100,14 +106,13 @@ public class IntfzModuloElegido {
 	 */
 	private void initialize(String nombreModulo) throws ClassNotFoundException {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 1111, 628);
+		frame.setBounds(100, 100, 1284, 649);
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//evita cerrar todo el proyecto
 		frame.getContentPane().setLayout(null);
 		
 		
-		
+		//carga los datos del modulo
 		mod = new Modulo(nombreModulo);
-		listaDeCurvas = mod.getCurvas();
 		listaDeCurvasACorregir = new ArrayList<CurvaOriginal>();
 		
 		
@@ -116,29 +121,68 @@ public class IntfzModuloElegido {
 
 		//CONSTRUCCION DE LA TABLA
 		//DEJAMOS LOS CANALES PARA FUTURAS IMPLEMENTACIONES
-		String[] columnName = {"N","Seleccionada","Isc(A)","Voc(V)",
-				"Pmax(W)","IPmax(A)","VPmax(V)","FF(%)","idEnBD"};
-		Object [] [] data= new Object [listaDeCurvas.size()] [columnName.length];//array de objetos
-		int i = 0;					//indice sobre el que se monta las filas
-		//volcamos los datos en las tablas
-		for(curva c : listaDeCurvas) {
-			CurvaOriginal co = (CurvaOriginal) c;
-			data[i][0] = i+1;					//indice
-			data[i][1] = false;					//este marco indica que curvas se han seleccionasdo
-			data[i][2] = co.getIsc();			//Isc
-			data[i][3] = co.getVoc();			//Voc
-			data[i][4] = co.getPmax();			//Pmax
-			data[i][5] = co.getIPmax();			//IPmax
-			data[i][6] = co.getVPmax();			//VPmax
-			data[i][7] = co.getFF();			//FF
-			data[i][8] = co.getIdCurva();		//id en la base de datos, necesario para obtener las seleccionadas
-			i++;
+		String[] columnName = {"N","fecha y hora","Isc(A)","Voc(V)",
+				"Pmax(W)","IPmax(A)","VPmax(V)","FF(%)"};
+		Object [] [] data= new Object [0] [columnName.length];//array de objetos
+		
+		
+//------PANEL DE CAMPAÑAS
+		JPanel panelCamp = new JPanel();
+		panelCamp.setBorder(new TitledBorder(null, "Campanyas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelCamp.setBounds(0, 0, 823, 112);
+		frame.getContentPane().add(panelCamp);
+		panelCamp.setLayout(null);
+		
+		JList<String> list = new JList<String>();
+		list.addMouseListener(new MouseAdapter() {
+			// TODO METODO QUE CARGA EN LA TABLA DE LAS CURVAS LOS DATOS
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				if (list.getSelectedValue() != null) {	//si seleccionas la patnalla vacia se activa
+					//cogemos el modelo y borramos sus datos anteriores
+					DefaultTableModel temp = (DefaultTableModel) tablaCurvas.getModel();
+					int total = temp.getRowCount() + 1;
+					for (int w = 0; w < total - 1; w++) {
+						temp.removeRow(0);
+					}
+					//insertamos cada elementos de la tabla
+					try {
+
+						int i = 0;
+						for (CurvaOriginal co : Campanya.getCurvas(mod.getNombre(), list.getSelectedValue())) {
+							temp.addRow(new Object[] { i + 1, co.getFecha(), co.getIsc(), co.getVoc(), co.getPmax(),
+									co.getIPmax(), co.getVPmax(), co.getFF()
+
+							});
+							i++;
+						}
+					} catch (ClassNotFoundException e) {
+						// TODO Auto-generated catch block
+						JOptionPane.showMessageDialog(null, e.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
+					} //end try/catch
+				}//end if
+				
+			}
+		});
+		list.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		list.setBounds(43, 25, 562, 76);
+		list.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);	//solo se puede seleccionar uno
+		list.setLayoutOrientation(JList.HORIZONTAL_WRAP);						//se despliega en columnas
+		//creamos el modelo
+		DefaultListModel<String> modeloCamp = new DefaultListModel<String>();
+		for(String cmp : mod.ListaCampanyas()){
+			modeloCamp.addElement(cmp);
 		}
 		
+		list.setModel(modeloCamp);//le asiganmos el modelo con los valores
+		panelCamp.add(list);
+	
+			
 		
 //------PANEL CURVAS	
 		panelCurva = new JPanel();
-		panelCurva.setBounds(0, 0, 609, 579);
+		panelCurva.setBorder(new TitledBorder(null, "Curvas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panelCurva.setBounds(0, 123, 823, 456);
 		frame.getContentPane().add(panelCurva);
 		panelCurva.setLayout(null);
 		DefaultTableModel model = new DefaultTableModel(data, columnName);
@@ -154,9 +198,9 @@ public class IntfzModuloElegido {
 				CurvaOriginal a = null;
 				//obtenemos la curva
 				try {
-					a = new CurvaOriginal( (int) tablaCurvas.getValueAt(seleccion, 8));	//coge la id (CAMBIAR ESTA COSA CUANDO SE ACTUALIZE LA BD)
+					a = new CurvaOriginal( tablaCurvas.getValueAt(seleccion, 1).toString(),mod.getNombre()); //obtiene la curva
 				} catch (ClassNotFoundException e) {
-					// TODO Auto-generated catch block
+					
 					JOptionPane.showMessageDialog(null, e.getMessage(),"ERROR!",JOptionPane.ERROR_MESSAGE);
 				}
 				XYSeries seriesA = new XYSeries("par i-v");
@@ -170,18 +214,18 @@ public class IntfzModuloElegido {
 				}
 		        // Introduccion de datos
 				int i = 0;
-				for( parIV pts : a.getPts()){
+				for( Entry<Double, Double> pt : a.getPts().entrySet()){
 					//parte de la tabla
-					double pot = pts.getVoltaje()*pts.getIntensidad();	//potencia
+					double pot = pt.getKey()*pt.getValue();	//potencia
 					temp.addRow(new Object[]{i+1,
-											Math.floor(pts.getVoltaje() * 100000) / 100000
-											,Math.floor(pts.getIntensidad() * 100000) / 100000
+											Math.floor(pt.getKey() * 100000) / 100000
+											,Math.floor(pt.getValue() * 100000) / 100000
 											,pot});
 					
 					i++;
 					
 					//parte grafica
-					seriesA.add(pts.getIntensidad(), pts.getVoltaje());
+					seriesA.add(pt.getKey(), pt.getValue());
 				}
 				
 
@@ -206,10 +250,10 @@ public class IntfzModuloElegido {
 		
 		
 		JScrollPane scrollPane = new JScrollPane(tablaCurvas);
-		scrollPane.setBounds(20, 22, 579, 512);
+		scrollPane.setBounds(20, 22, 793, 389);
 		panelCurva.add(scrollPane);
 		
-				//-----BOTON CORREGIR
+		//-----BOTON CORREGIR
 				JButton btnCorregir = new JButton("Corregir");
 				btnCorregir.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
@@ -224,31 +268,33 @@ public class IntfzModuloElegido {
 							for(int w=0;w<curvasSelecionadas.length;w++){
 								try {
 									//Basicamente metemos en la lista de curvas corregidas las seleccionasa
-									listaDeCurvasACorregir.add(new CurvaOriginal( (int) tablaCurvas.getValueAt(curvasSelecionadas[w], 8)) );
-									//CAMBIARF ESTA COSA CUANDO CAMBIE LA BD
+									listaDeCurvasACorregir.add(new CurvaOriginal( tablaCurvas.getValueAt(curvasSelecionadas[w], 1).toString(),mod.getNombre() ) );
+									
 								} catch (ClassNotFoundException e1) {
-									// TODO Auto-generated catch block
+									
 									JOptionPane.showMessageDialog(null, e1.getMessage(),"ERROR!",JOptionPane.ERROR_MESSAGE);
 								}
 							}
-							
+							//coegmos los valores de la primera curva seleccionada
 							Iterator<CurvaOriginal> ic = listaDeCurvasACorregir.iterator();
 							CurvaOriginal temporal = ic.next();
-							txtfT1.setText(String.valueOf(temporal.getTemp()));
-							txtfIrr1.setText(String.valueOf(temporal.getIrr()));
+							//TODO CAMBIAR OR LA TEMP Y LA IRRADENCIA DE LOS CANALES
+							txtfT1.setText("valor del canal"); 	//cambiar con los canales
+							txtfIrr1.setText("valor del canal");	//cambiar con los canales
 							panelCurva.setVisible(false);
+							panelCamp.setVisible(false);
 							panelCorreccion.setVisible(true);
 							
 						}
 					}
 				});
-				btnCorregir.setBounds(510, 545, 89, 23);
+				btnCorregir.setBounds(724, 422, 89, 23);
 				panelCurva.add(btnCorregir);					
 									
 
-		//------PANEL CORRECCION
+//------PANEL CORRECCION
 		panelCorreccion = new JPanel();
-		panelCorreccion.setBounds(0, 0, 609, 579);
+		panelCorreccion.setBounds(0, 0, 823, 579);
 		frame.getContentPane().add(panelCorreccion);
 		panelCorreccion.setLayout(null);
 
@@ -352,7 +398,7 @@ public class IntfzModuloElegido {
 										Double.parseDouble(txtfIrr2.getText()),
 										Double.parseDouble(txtfT1.getText()),
 										Double.parseDouble(txtfT2.getText()),
-										is.getPts());
+										is.getPts());	// TODO ESTE NULL HA DE CAMBIARSE CUANDO CAMBIE EL METODO POR LA LISTA DE PUNTOS
 						
 						
 						IntfzCurvaCorregida cci = new IntfzCurvaCorregida(curva_corregida);
@@ -374,6 +420,7 @@ public class IntfzModuloElegido {
 				listaDeCurvasACorregir.clear();
 
 				panelCorreccion.setVisible(false);
+				panelCamp.setVisible(true);
 				panelCurva.setVisible(true);
 			}
 		});
@@ -449,7 +496,7 @@ public class IntfzModuloElegido {
 		layeredPane.setBorder(BorderFactory.createTitledBorder(
                 "Representación gráfica"));
 		
-		layeredPane.setBounds(615, 11, 425, 568);
+		layeredPane.setBounds(833, 0, 435, 579);
 		frame.getContentPane().add(layeredPane);
 		
 		
@@ -479,7 +526,7 @@ public class IntfzModuloElegido {
 		
         panelGrafica = new ChartPanel(chart);
         panelGrafica.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-        panelGrafica.setBounds(10, 21, 405, 251);
+        panelGrafica.setBounds(10, 21, 415, 251);
         layeredPane.add(panelGrafica);
         panelGrafica.setName("A");
         
@@ -492,12 +539,13 @@ public class IntfzModuloElegido {
         layeredPane.add(tablaGraf);       
         
         scrollPane_1 = new JScrollPane(tablaGraf);
-        scrollPane_1.setBounds(10, 283, 405, 274);
+        scrollPane_1.setBounds(10, 283, 415, 285);
         layeredPane.add(scrollPane_1);
         
 		
 		
 //-----necesario para la inicializacion
+        panelCamp.setVisible(true);
 		panelCurva.setVisible(true);
 		panelCorreccion.setVisible(false);
 	}
