@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
 import principal.*;
 
@@ -44,6 +45,9 @@ import javax.swing.border.EtchedBorder;
 import java.awt.ScrollPane;
 import javax.swing.border.TitledBorder;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
+
+import java.awt.Toolkit;
 
 public class IntfzModuloElegido {
 
@@ -106,9 +110,9 @@ public class IntfzModuloElegido {
 	 */
 	private void initialize(String nombreModulo) throws ClassNotFoundException {
 		frame = new JFrame();
+		frame.setIconImage(Toolkit.getDefaultToolkit().getImage(IntfzModuloElegido.class.getResource("/Images/pyromikLogo.jpeg")));
 		frame.setBounds(100, 100, 1284, 649);
-		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);//evita cerrar todo el proyecto
-		frame.getContentPane().setLayout(null);
+		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		
 		//carga los datos del modulo
@@ -124,18 +128,19 @@ public class IntfzModuloElegido {
 		String[] columnName = {"N","fecha y hora","Isc(A)","Voc(V)",
 				"Pmax(W)","IPmax(A)","VPmax(V)","FF(%)"};
 		Object [] [] data= new Object [0] [columnName.length];//array de objetos
+		frame.getContentPane().setLayout(null);
 		
 		
 //------PANEL DE CAMPAÑAS
 		JPanel panelCamp = new JPanel();
-		panelCamp.setBorder(new TitledBorder(null, "Campanyas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelCamp.setBounds(0, 0, 823, 112);
+		panelCamp.setBorder(new TitledBorder(null, "Campanyas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		frame.getContentPane().add(panelCamp);
 		panelCamp.setLayout(null);
 		
 		JList<String> list = new JList<String>();
 		list.addMouseListener(new MouseAdapter() {
-			// TODO METODO QUE CARGA EN LA TABLA DE LAS CURVAS LOS DATOS
+			
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				if (list.getSelectedValue() != null) {	//si seleccionas la patnalla vacia se activa
@@ -157,7 +162,7 @@ public class IntfzModuloElegido {
 							i++;
 						}
 					} catch (ClassNotFoundException e) {
-						// TODO Auto-generated catch block
+						
 						JOptionPane.showMessageDialog(null, e.getMessage(), "Error!", JOptionPane.ERROR_MESSAGE);
 					} //end try/catch
 				}//end if
@@ -181,8 +186,8 @@ public class IntfzModuloElegido {
 		
 //------PANEL CURVAS	
 		panelCurva = new JPanel();
-		panelCurva.setBorder(new TitledBorder(null, "Curvas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		panelCurva.setBounds(0, 123, 823, 456);
+		panelCurva.setBorder(new TitledBorder(null, "Curvas", TitledBorder.LEADING, TitledBorder.TOP, null, null));
 		frame.getContentPane().add(panelCurva);
 		panelCurva.setLayout(null);
 		DefaultTableModel model = new DefaultTableModel(data, columnName);
@@ -248,6 +253,17 @@ public class IntfzModuloElegido {
 		});
 		tablaCurvas.setBounds(20, 11, 414, 183);
 		
+		//CREACION DEL POPUPMENU!
+		JPopupMenu popupMenu = new JPopupMenu();
+		JMenuItem menuItemVer = new JMenuItem("Ver curvas corregidas");
+		menuItemVer.addActionListener(new ActionListener() {
+			//que se hace al seleccionar este item
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(frame, "New File clicked!");
+            }
+        });
+		popupMenu.add(menuItemVer);
+		tablaCurvas.setComponentPopupMenu(popupMenu);//se lo asociamos a la tabla
 		
 		JScrollPane scrollPane = new JScrollPane(tablaCurvas);
 		scrollPane.setBounds(20, 22, 793, 389);
@@ -398,7 +414,7 @@ public class IntfzModuloElegido {
 										Double.parseDouble(txtfIrr2.getText()),
 										Double.parseDouble(txtfT1.getText()),
 										Double.parseDouble(txtfT2.getText()),
-										is.getPts());	// TODO ESTE NULL HA DE CAMBIARSE CUANDO CAMBIE EL METODO POR LA LISTA DE PUNTOS
+										is);	
 						
 						
 						IntfzCurvaCorregida cci = new IntfzCurvaCorregida(curva_corregida);
@@ -406,6 +422,7 @@ public class IntfzModuloElegido {
 					}
 				}catch(Exception ex) {
 					JOptionPane.showMessageDialog(null, ex.getMessage(),"ERROR!",JOptionPane.ERROR_MESSAGE);
+					ex.printStackTrace();
 				}
 
 			}
@@ -490,14 +507,17 @@ public class IntfzModuloElegido {
 		lblMedidaIrr2.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblMedidaIrr2.setBounds(457, 221, 46, 14);
 		panelCorreccion.add(lblMedidaIrr2);
+		
+		
 //---------PANEL GRAFICO
 		
 		layeredPane = new JLayeredPane();
+		layeredPane.setBounds(833, 0, 435, 579);
 		layeredPane.setBorder(BorderFactory.createTitledBorder(
                 "Representación gráfica"));
-		
-		layeredPane.setBounds(833, 0, 435, 579);
 		frame.getContentPane().add(layeredPane);
+		
+		
 		
 		
 		XYSeries series = new XYSeries("par i-v");
