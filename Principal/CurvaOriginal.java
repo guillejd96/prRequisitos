@@ -116,14 +116,14 @@ public class CurvaOriginal implements curva {
 	public  List<CurvaCorregida> listaDeCurvasCorregidas() throws ClassNotFoundException{
 		BDConnection miBD = new BDConnection();
 		ArrayList<CurvaCorregida> lista = new ArrayList<CurvaCorregida>();
-
-		for(Object[] elemento : miBD.Select("SELECT idCurvaCorregida FROM curvaCorregida where curvaOriginal_fechaHoraCruva = '" + fechaHora + "' AND curvaOriginal_campanya_nombreModulo = '"+modName+"' ;")){
-
+		
+		for(Object[] elemento : miBD.Select("SELECT idCurvaCorregida FROM curvaCorregida where curvaOriginal_fechaHoraCurva = '" + fechaHora + "' AND orig_camp_nModulo = '"+modName+"' ;")){
+			
 			lista.add( new CurvaCorregida( Integer.parseInt(elemento[0].toString()) ) );
-
-
+			
+			
 		}
-		return null;
+		return lista;
 	}
 
 	public TreeMap<Double,Double> getPts() {
